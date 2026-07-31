@@ -30,7 +30,7 @@
     const bar = $('.scroll-progress');
     if (bar) bar.style.width = `${progress}%`;
 
-    const marker = (document.querySelector('.site-header')?.offsetHeight || 0) + innerHeight * .28;
+    const marker = (document.querySelector('.site-header')?.offsetHeight || 0) + innerHeight * .7;
     let active = sections[0];
     for (const s of sections) if (s.getBoundingClientRect().top <= marker) active = s;
     sections.forEach(s => $('.section-label', s)?.classList.toggle('is-active', s === active));
