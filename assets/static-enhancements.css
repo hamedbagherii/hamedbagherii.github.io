@@ -1,0 +1,11 @@
+
+html { scroll-behavior: smooth; }
+.site-header nav button, .brand, footer button, .primary-btn { cursor: pointer; }
+[data-reveal] { opacity: 0; transform: translateY(var(--scroll-reveal-distance, 30px)); filter: blur(var(--scroll-reveal-blur, 4px)); transition: opacity var(--scroll-reveal-duration, .8s) ease, transform var(--scroll-reveal-duration, .8s) ease, filter var(--scroll-reveal-duration, .8s) ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; filter: none; }
+.exo-gallery-open { cursor: zoom-in; }
+.portfolio-lightbox { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 28px; background: rgba(0,0,0,.92); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+.portfolio-lightbox.open { opacity: 1; pointer-events: auto; }
+.portfolio-lightbox img { max-width: min(1500px, 96vw); max-height: 90vh; object-fit: contain; }
+.portfolio-lightbox button { position: absolute; top: 18px; right: 22px; border: 0; background: transparent; color: white; font-size: 34px; cursor: pointer; }
+body.lightbox-open { overflow: hidden; }
