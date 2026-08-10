@@ -1,0 +1,118 @@
+/* PCB system-architecture hero background */
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-grid { z-index: 0; }
+.hero-particles { display: none !important; }
+
+.pcb-architecture-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  opacity: .92;
+}
+
+.hero-copy,
+.hero-system,
+.hero-metrics {
+  position: relative;
+  z-index: 3;
+}
+
+.pcb-trace {
+  fill: none;
+  stroke: rgba(217, 138, 61, .22);
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+}
+
+.pcb-trace-secondary {
+  stroke: rgba(240, 165, 87, .11);
+  stroke-width: .85;
+}
+
+.pcb-pad {
+  fill: #0a0f16;
+  stroke: rgba(240, 165, 87, .42);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.pcb-via {
+  fill: rgba(240, 165, 87, .22);
+  stroke: rgba(240, 165, 87, .55);
+  stroke-width: .7;
+  vector-effect: non-scaling-stroke;
+}
+
+.pcb-led {
+  fill: rgba(240, 165, 87, .28);
+  filter: url(#pcb-led-glow);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pcb-led.is-active {
+  animation: pcbLedPulse 2.8s ease-in-out infinite;
+}
+
+.pcb-signal {
+  fill: #f0a557;
+  filter: url(#pcb-signal-glow);
+  opacity: .9;
+}
+
+.pcb-label {
+  fill: rgba(139, 152, 165, .42);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+
+.pcb-node-label {
+  fill: rgba(240, 165, 87, .58);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: .1em;
+}
+
+.pcb-scan {
+  fill: none;
+  stroke: rgba(240, 165, 87, .13);
+  stroke-width: 1;
+  stroke-dasharray: 10 18;
+  vector-effect: non-scaling-stroke;
+  animation: pcbScan 12s linear infinite;
+}
+
+@keyframes pcbLedPulse {
+  0%, 72%, 100% { opacity: .24; transform: scale(.8); }
+  78% { opacity: 1; transform: scale(1.5); }
+  84% { opacity: .42; transform: scale(1); }
+  90% { opacity: .9; transform: scale(1.25); }
+}
+
+@keyframes pcbScan {
+  to { stroke-dashoffset: -280; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcb-led.is-active,
+  .pcb-scan { animation: none !important; }
+  .pcb-signal { display: none; }
+}
+
+@media (max-width: 900px) {
+  .pcb-architecture-bg { opacity: .62; }
+  .pcb-label,
+  .pcb-node-label { display: none; }
+}

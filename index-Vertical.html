@@ -1136,238 +1136,13 @@
 }
 </style>
 
-
-<style id="final-hero-refinement-v1">
-/* Final hero refinement — stronger hierarchy, better balance, readable text. */
-.hero {
-  min-height: min(100vh, 980px) !important;
-  grid-template-columns: minmax(0, 1.08fr) minmax(400px, .92fr) !important;
-  padding-top: 118px !important;
-}
-
-.hero-copy {
-  max-width: 880px !important;
-  padding-bottom: 58px !important;
-}
-
-.hero h1 {
-  margin: 12px 0 0 !important;
-  max-width: 900px !important;
-  font-size: clamp(58px, 5.25vw, 86px) !important;
-  line-height: .98 !important;
-  letter-spacing: -.055em !important;
-  font-weight: 520 !important;
-}
-
-.hero h1 .hero-highlight {
-  display: inline-block !important;
-  white-space: nowrap !important;
-  color: transparent !important;
-  background-image:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 238, 218, 0) 18%,
-      rgba(255, 247, 235, .96) 50%,
-      rgba(255, 238, 218, 0) 82%,
-      transparent 100%
-    ),
-    linear-gradient(
-      90deg,
-      #f0a557 0%,
-      #ffad55 55%,
-      #f4c083 100%
-    ) !important;
-  background-size:
-    28% 100%,
-    100% 100% !important;
-  background-repeat: no-repeat !important;
-  background-position:
-    -45% 0,
-    0 0;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  animation: electrical-title-scan 5s linear infinite !important;
-}
-
-.hero h1 .hero-line {
-  display: inline-block !important;
-  color: #f4f6f8 !important;
-}
-
-.hero-intro {
-  max-width: 720px !important;
-  margin-top: 30px !important;
-  font-size: 15.5px !important;
-  line-height: 1.72 !important;
-  color: #9aa6b2 !important;
-}
-
-.hero-actions {
-  margin-top: 30px !important;
-}
-
-.hero-system {
-  align-self: center !important;
-  justify-self: center !important;
-  width: min(100%, 560px) !important;
-}
-
-.profile-portrait {
-  width: min(100%, 520px) !important;
-  aspect-ratio: 1 / 1 !important;
-}
-
-.profile-portrait > img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
-/* Keep the background technical but less active behind copy. */
-.hero::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 1 !important;
-  pointer-events: none !important;
-  background:
-    linear-gradient(90deg,
-      rgba(10,15,22,.62) 0%,
-      rgba(10,15,22,.38) 32%,
-      rgba(10,15,22,.05) 62%,
-      rgba(10,15,22,0) 100%) !important;
-}
-
-.hero-copy,
-.hero-system,
-.hero-metrics {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.system-line {
-  font-size: 12.5px !important;
-}
-
-.hero-kicker {
-  margin-top: 22px !important;
-  font-size: 12px !important;
-}
-
-/* Header logo/name spacing refinement without changing branding. */
-.brand {
-  gap: 10px !important;
-}
-
-.brand-name {
-  letter-spacing: .14em !important;
-}
-
-/* Responsive */
-@media (max-width: 1180px) {
-  .hero {
-    grid-template-columns: minmax(0, 1.03fr) minmax(350px, .97fr) !important;
-  }
-
-  .hero h1 {
-    font-size: clamp(52px, 5.7vw, 74px) !important;
-  }
-
-  .hero-system {
-    width: min(100%, 470px) !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr !important;
-    padding-top: 108px !important;
-  }
-
-  .hero-copy {
-    max-width: 760px !important;
-    padding-bottom: 30px !important;
-  }
-
-  .hero h1 {
-    font-size: clamp(48px, 9.5vw, 68px) !important;
-  }
-
-  .hero h1 .hero-highlight {
-    white-space: normal !important;
-  }
-
-  .hero-system {
-    width: min(82vw, 480px) !important;
-    margin: 18px auto 44px !important;
-  }
-}
-
-@media (max-width: 560px) {
-  .hero h1 {
-    font-size: clamp(42px, 12.5vw, 58px) !important;
-    line-height: 1 !important;
-  }
-
-  .hero-intro {
-    font-size: 14px !important;
-    line-height: 1.68 !important;
-  }
-}
-
-/* Updated image logo for header + system loader */
-.brand-mark.brand-mark-image {
-  width: 34px !important;
-  height: 34px !important;
-  border: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  background: transparent !important;
-}
-
-.brand-mark.brand-mark-image img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  display: block !important;
-}
-
-.system-loader-brand {
-  gap: 14px !important;
-}
-
-.system-loader-logo {
-  width: 70px !important;
-  height: 70px !important;
-  border: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.system-loader-logo img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  display: block !important;
-}
-
-</style>
-
 </head>
  <body class="is-loading">
   <div aria-label="Loading portfolio" aria-live="polite" id="system-loader" role="status">
    <div class="system-loader-panel">
     <div class="system-loader-brand">
-     <span class="system-loader-logo">
-      <img alt="HB logo" src="assets/hb-logo-metal.png"/>
+     <span>
+      HB
      </span>
      <b>
       SYSTEM INITIALIZATION
@@ -1392,8 +1167,8 @@
    </div>
    <header class="site-header">
     <button aria-label="Return to top" class="brand">
-     <span class="brand-mark brand-mark-image">
-      <img alt="HB logo" src="assets/hb-logo-header.png"/>
+     <span class="brand-mark">
+      HB
      </span>
      <span class="brand-name">
       HAMED_BAGHERI.ENG
@@ -1463,11 +1238,14 @@
       BUILDING RELIABLE MACHINES FOR THE REAL WORLD
      </p>
      <h1 id="hero-title">
-       Leading<br/>
-       <span class="hero-highlight">electrical architecture</span><br/>
-       <span class="hero-line">for advanced</span><br/>
-       <span class="hero-line">robotics.</span>
-      </h1>
+      Leading
+      <br/>
+      <span>
+       electrical architecture
+      </span>
+      <br/>
+      for advanced robotics.
+     </h1>
      <p class="hero-intro">
       Senior Robotics Electronics Engineer specializing in electrical architecture and embedded systems for exoskeletons, medical robotics, and autonomous platforms. Currently at
       <a href="https://humaninmotion.com/" rel="noreferrer" target="_blank">
