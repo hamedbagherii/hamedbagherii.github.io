@@ -112,7 +112,14 @@
       thumbs.forEach((t,n) => { t.classList.toggle('active', n===index); t.setAttribute('aria-selected', n===index ? 'true':'false'); });
       if (counter) counter.textContent = `${String(index+1).padStart(2,'0')} / ${String(thumbs.length).padStart(2,'0')}`;
       const bits = $('span', thumb)?.textContent.split('·').map(x=>x.trim()) || [];
-      if (caption && bits[1]) $('em', caption).textContent = bits[1];
+      if (caption) {
+        const label = thumb.dataset.captionLabel || bits[1];
+        const title = thumb.dataset.captionTitle;
+        const desc = thumb.dataset.captionDesc;
+        if (label && $('em', caption)) $('em', caption).textContent = label;
+        if (title && $('strong', caption)) $('strong', caption).textContent = title;
+        if (desc && $('span', caption)) $('span', caption).textContent = desc;
+      }
     }
     thumbs.forEach((t,i) => t.addEventListener('click', () => show(i)));
     prev?.addEventListener('click', e => {e.stopPropagation(); show(index-1)});
@@ -226,4 +233,112 @@
   }
 
   updateScrollState();
+})();
+
+// Project media tabs (images / videos) and video selection.
+(() => {
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+
+  function buildVideoUrl(videoId, shouldPlay) {
+    const playerOrigin = /^https?:$/.test(location.protocol) ? location.origin : 'https://hamedbagheri.dev';
+    const url = new URL(`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`);
+    url.searchParams.set('rel', '0');
+    url.searchParams.set('playsinline', '1');
+    url.searchParams.set('origin', playerOrigin);
+    if (shouldPlay) url.searchParams.set('autoplay', '1');
+    return url.toString();
+  }
+
+  function setMode(gallery, mode) {
+    const imagePanel = $('.exo-images-panel', gallery);
+    const videoPanel = $('.exo-video-panel', gallery);
+    if (!imagePanel || !videoPanel) return;
+    const videos = mode === 'videos';
+    gallery.classList.toggle('media-videos', videos);
+    imagePanel.hidden = videos;
+    videoPanel.hidden = !videos;
+    $$('.exo-media-tabs button', gallery).forEach(btn => {
+      const on = btn.dataset.mediaMode === mode;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-selected', String(on));
+      btn.tabIndex = on ? 0 : -1;
+    });
+    if (!videos) {
+      const frame = $('.exo-video-frame iframe', videoPanel);
+      const selected = $('.exo-video-thumbs button[aria-selected="true"]', videoPanel);
+      if (frame && selected?.dataset.videoId) frame.src = buildVideoUrl(selected.dataset.videoId, false);
+    }
+  }
+
+  function selectVideo(gallery, btn, shouldPlay = true) {
+    const panel = $('.exo-video-panel', gallery);
+    if (!panel) return;
+    const thumbs = $$('.exo-video-thumbs button', panel);
+    const i = thumbs.indexOf(btn);
+    const id = btn.dataset.videoId;
+    if (!id) return;
+    const title = btn.dataset.videoTitle || `Video ${i + 1}`;
+    const desc = btn.dataset.videoDesc || '';
+    const frame = $('.exo-video-frame iframe', panel);
+    if (frame) {
+      frame.src = buildVideoUrl(id, shouldPlay);
+      frame.title = title;
+    }
+    thumbs.forEach((b, n) => {
+      const selected = n === i;
+      b.setAttribute('aria-selected', String(selected));
+      b.tabIndex = selected ? 0 : -1;
+    });
+    const info = $('.exo-video-info', panel);
+    if (info) {
+      const em = $('em', info), strong = $('strong', info), span = $('span', info);
+      if (em) em.textContent = `VIDEO ${String(i + 1).padStart(2, '0')} / ${String(thumbs.length).padStart(2, '0')}`;
+      if (strong) strong.textContent = title;
+      if (span) span.textContent = desc;
+    }
+  }
+
+  document.addEventListener('click', event => {
+    const modeBtn = event.target.closest('[data-media-mode]');
+    if (modeBtn) {
+      const gallery = modeBtn.closest('.exo-gallery');
+      if (gallery) {
+        event.preventDefault();
+        setMode(gallery, modeBtn.dataset.mediaMode);
+      }
+      return;
+    }
+    const videoBtn = event.target.closest('.exo-video-thumbs button[data-video-id]');
+    if (videoBtn) {
+      const gallery = videoBtn.closest('.exo-gallery');
+      if (gallery) {
+        event.preventDefault();
+        setMode(gallery, 'videos');
+        selectVideo(gallery, videoBtn);
+      }
+    }
+  });
+
+  $$('.exo-gallery').forEach(gallery => {
+    if (!$('.exo-video-panel', gallery)) return;
+    const mediaTabs = $$('.exo-media-tabs button', gallery);
+    const videoTabs = $$('.exo-video-thumbs button', gallery);
+    const moveSelection = (tabs, index, event) => {
+      const steps = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1};
+      let next;
+      if (event.key in steps) next = (index + steps[event.key] + tabs.length) % tabs.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      tabs[next].focus();
+      tabs[next].click();
+    };
+    mediaTabs.forEach((tab, index) => tab.addEventListener('keydown', event => moveSelection(mediaTabs, index, event)));
+    videoTabs.forEach((tab, index) => tab.addEventListener('keydown', event => moveSelection(videoTabs, index, event)));
+    const initialVideo = videoTabs.find(tab => tab.getAttribute('aria-selected') === 'true') || videoTabs[0];
+    if (initialVideo) selectVideo(gallery, initialVideo, false);
+    setMode(gallery, 'images');
+  });
 })();
