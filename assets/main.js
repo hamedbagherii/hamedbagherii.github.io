@@ -6,6 +6,9 @@
   const sections = $$('.content-section[id]');
   const navButtons = $$('.site-header nav button');
   const byLabel = new Map(sections.map(s => [s.id.toLowerCase(), s]));
+  const siteHeader = $('.site-header');
+  const primaryNav = $('#primary-navigation');
+  const mobileNavToggle = $('.mobile-nav-toggle');
 
 
   // Full-screen system preloader. It reaches 100% only after the page is ready.
@@ -61,11 +64,38 @@
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
 
+  function setMobileNavOpen(open, returnFocus = false) {
+    if (!mobileNavToggle || !primaryNav) return;
+    siteHeader?.classList.toggle('mobile-nav-open', open);
+    mobileNavToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    mobileNavToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    if (!open && returnFocus) mobileNavToggle.focus();
+  }
+
+  mobileNavToggle?.addEventListener('click', () => {
+    setMobileNavOpen(mobileNavToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
   navButtons.forEach(btn => {
     const label = $('.nav-label', btn)?.textContent.trim().toLowerCase();
     const aliases = { highlights: 'awards' };
     const target = byLabel.get(aliases[label] || label);
-    btn.addEventListener('click', () => scrollToSection(target));
+    btn.addEventListener('click', () => {
+      setMobileNavOpen(false);
+      scrollToSection(target);
+    });
+  });
+  addEventListener('keydown', event => {
+    if (event.key === 'Escape' && mobileNavToggle?.getAttribute('aria-expanded') === 'true') {
+      setMobileNavOpen(false, true);
+    }
+  });
+  addEventListener('click', event => {
+    if (mobileNavToggle?.getAttribute('aria-expanded') !== 'true' || siteHeader?.contains(event.target)) return;
+    setMobileNavOpen(false);
+  });
+  matchMedia('(min-width: 1101px)').addEventListener('change', event => {
+    if (event.matches) setMobileNavOpen(false);
   });
   $('.brand')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
   $('footer button')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
@@ -77,18 +107,23 @@
     const bar = $('.scroll-progress');
     if (bar) bar.style.width = `${progress}%`;
 
-    const marker = (document.querySelector('.site-header')?.offsetHeight || 0) + innerHeight * .7;
+    const marker = (siteHeader?.offsetHeight || 0) + Math.min(innerHeight * .35, 320);
     let active = null;
     for (const s of sections) if (s.getBoundingClientRect().top <= marker) active = s;
+    if (Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 4) active = sections.at(-1) || active;
     sections.forEach(s => $('.section-label', s)?.classList.toggle('is-active', s === active));
     navButtons.forEach(btn => {
       const label = $('.nav-label', btn)?.textContent.trim().toLowerCase();
       const normalized = label === 'highlights' ? 'awards' : label;
-      btn.classList.toggle('active', normalized === active?.id.toLowerCase());
+      const isActive = normalized === active?.id.toLowerCase();
+      btn.classList.toggle('active', isActive);
+      if (isActive) btn.setAttribute('aria-current', 'location');
+      else btn.removeAttribute('aria-current');
     });
   }
   addEventListener('scroll', updateScrollState, {passive:true});
   addEventListener('resize', updateScrollState);
+  updateScrollState();
 
   const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); revealObserver.unobserve(e.target); } });
@@ -108,7 +143,7 @@
       index = (i + thumbs.length) % thumbs.length;
       const thumb = thumbs[index], img = $('img', thumb);
       stageImg.src = img.src;
-      stageImg.alt = thumb.getAttribute('aria-label') || '';
+      stageImg.alt = thumb.dataset.imageAlt || thumb.dataset.captionDesc || thumb.dataset.captionTitle || thumb.getAttribute('aria-label')?.replace(/^Show\s+/i, '') || '';
       thumbs.forEach((t,n) => { t.classList.toggle('active', n===index); t.setAttribute('aria-selected', n===index ? 'true':'false'); });
       if (counter) counter.textContent = `${String(index+1).padStart(2,'0')} / ${String(thumbs.length).padStart(2,'0')}`;
       const bits = $('span', thumb)?.textContent.split('·').map(x=>x.trim()) || [];
@@ -127,15 +162,71 @@
     show(index);
   });
 
+  $$('.exo-gallery-thumbs button img, .exo-video-selector img').forEach(img => {
+    img.alt = '';
+    img.setAttribute('aria-hidden', 'true');
+  });
+
   const lb = document.createElement('div');
   lb.className = 'portfolio-lightbox';
-  lb.setAttribute('role','dialog'); lb.setAttribute('aria-modal','true'); lb.setAttribute('aria-label','Expanded project image');
-  lb.innerHTML = '<button type="button" aria-label="Close image">×</button><img alt="">';
+  lb.setAttribute('role','dialog'); lb.setAttribute('aria-modal','true'); lb.setAttribute('aria-labelledby','portfolio-lightbox-title');
+  lb.innerHTML = '<button class="portfolio-lightbox-close" type="button" aria-label="Close expanded image">×</button><button class="portfolio-lightbox-nav portfolio-lightbox-prev" type="button" aria-label="Show previous image">←</button><figure><img alt=""><figcaption><span class="portfolio-lightbox-label"></span><strong id="portfolio-lightbox-title"></strong><small class="portfolio-lightbox-counter"></small></figcaption></figure><button class="portfolio-lightbox-nav portfolio-lightbox-next" type="button" aria-label="Show next image">→</button>';
   document.body.appendChild(lb);
   const lbImg = $('img', lb);
-  function closeLb(){ lb.classList.remove('open'); document.body.classList.remove('lightbox-open'); }
-  $$('.exo-gallery-open').forEach(btn => btn.addEventListener('click', () => { const img=$('img',btn); lbImg.src=img.src; lbImg.alt=img.alt; lb.classList.add('open'); document.body.classList.add('lightbox-open'); }));
-  $('button',lb).addEventListener('click',closeLb); lb.addEventListener('click',e=>{if(e.target===lb)closeLb()}); addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
+  const lbClose = $('.portfolio-lightbox-close', lb);
+  const lbPrev = $('.portfolio-lightbox-prev', lb);
+  const lbNext = $('.portfolio-lightbox-next', lb);
+  const lbLabel = $('.portfolio-lightbox-label', lb);
+  const lbTitle = $('#portfolio-lightbox-title', lb);
+  const lbCounter = $('.portfolio-lightbox-counter', lb);
+  let lbGallery = null;
+  let lbIndex = 0;
+  let lbTrigger = null;
+  function renderLb(i) {
+    const thumbs = lbGallery ? $$('.exo-gallery-thumbs button', lbGallery) : [];
+    if (!thumbs.length) return;
+    lbIndex = (i + thumbs.length) % thumbs.length;
+    thumbs[lbIndex].click();
+    const thumb = thumbs[lbIndex];
+    const image = $('.exo-gallery-stage img', lbGallery);
+    const caption = $('.exo-gallery-caption', lbGallery);
+    const thumbText = $('span', thumb)?.textContent.trim().replace(/\s+/g, ' ') || '';
+    const thumbLabel = thumb.dataset.captionLabel || thumbText.replace(/^\d+\s*(?:·\s*)?/, '');
+    const thumbTitle = thumb.dataset.captionTitle || thumb.getAttribute('aria-label')?.replace(/^Show\s+/i, '');
+    lbImg.src = image.src;
+    lbImg.alt = image.alt;
+    lbLabel.textContent = thumbLabel || $('em', caption)?.textContent.trim() || '';
+    lbTitle.textContent = thumbTitle || $('strong', caption)?.textContent.trim() || image.alt;
+    lbCounter.textContent = `${String(lbIndex + 1).padStart(2, '0')} / ${String(thumbs.length).padStart(2, '0')}`;
+  }
+  function closeLb() {
+    if (!lb.classList.contains('open')) return;
+    lb.classList.remove('open');
+    document.body.classList.remove('lightbox-open');
+    lbTrigger?.focus();
+  }
+  $$('.exo-gallery-open').forEach(btn => btn.addEventListener('click', () => {
+    lbGallery = btn.closest('.exo-gallery');
+    lbTrigger = btn;
+    const thumbs = $$('.exo-gallery-thumbs button', lbGallery);
+    const activeIndex = thumbs.findIndex(thumb => thumb.getAttribute('aria-selected') === 'true');
+    lbPrev.hidden = thumbs.length < 2;
+    lbNext.hidden = thumbs.length < 2;
+    renderLb(Math.max(0, activeIndex));
+    lb.classList.add('open');
+    document.body.classList.add('lightbox-open');
+    lbClose.focus();
+  }));
+  lbClose.addEventListener('click', closeLb);
+  lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
+  lbNext.addEventListener('click', () => renderLb(lbIndex + 1));
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowLeft') renderLb(lbIndex - 1);
+    if (e.key === 'ArrowRight') renderLb(lbIndex + 1);
+  });
 
 
   // Subtle animated network in the hero background.
@@ -235,110 +326,64 @@
   updateScrollState();
 })();
 
-// Project media tabs (images / videos) and video selection.
+// Privacy-enhanced project video selection.
 (() => {
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
-  function buildVideoUrl(videoId, shouldPlay) {
+  function buildVideoUrl(videoId, shouldPlay, startAt = 0) {
     const playerOrigin = /^https?:$/.test(location.protocol) ? location.origin : 'https://hamedbagheri.dev';
     const url = new URL(`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`);
     url.searchParams.set('rel', '0');
     url.searchParams.set('playsinline', '1');
     url.searchParams.set('origin', playerOrigin);
+    if (startAt > 0) url.searchParams.set('start', String(startAt));
     if (shouldPlay) url.searchParams.set('autoplay', '1');
     return url.toString();
   }
 
-  function setMode(gallery, mode) {
-    const imagePanel = $('.exo-images-panel', gallery);
-    const videoPanel = $('.exo-video-panel', gallery);
-    if (!imagePanel || !videoPanel) return;
-    const videos = mode === 'videos';
-    gallery.classList.toggle('media-videos', videos);
-    imagePanel.hidden = videos;
-    videoPanel.hidden = !videos;
-    $$('.exo-media-tabs button', gallery).forEach(btn => {
-      const on = btn.dataset.mediaMode === mode;
-      btn.classList.toggle('active', on);
-      btn.setAttribute('aria-selected', String(on));
-      btn.tabIndex = on ? 0 : -1;
-    });
-    if (!videos) {
-      const frame = $('.exo-video-frame iframe', videoPanel);
-      const selected = $('.exo-video-thumbs button[aria-selected="true"]', videoPanel);
-      if (frame && selected?.dataset.videoId) frame.src = buildVideoUrl(selected.dataset.videoId, false);
-    }
-  }
+  $$('.exo-video-strip').forEach(videoStrip => {
+    const player = $('.exo-video-feature iframe', videoStrip);
+    const selectors = $$('.exo-video-selector', videoStrip);
+    const currentNumber = $('.exo-video-current', videoStrip);
+    if (!player || !selectors.length) return;
 
-  function selectVideo(gallery, btn, shouldPlay = true) {
-    const panel = $('.exo-video-panel', gallery);
-    if (!panel) return;
-    const thumbs = $$('.exo-video-thumbs button', panel);
-    const i = thumbs.indexOf(btn);
-    const id = btn.dataset.videoId;
-    if (!id) return;
-    const title = btn.dataset.videoTitle || `Video ${i + 1}`;
-    const desc = btn.dataset.videoDesc || '';
-    const frame = $('.exo-video-frame iframe', panel);
-    if (frame) {
-      frame.src = buildVideoUrl(id, shouldPlay);
-      frame.title = title;
+    function selectVideo(selector, shouldPlay = true) {
+      const videoId = selector.dataset.videoId;
+      const startAt = Number.parseInt(selector.dataset.videoStart || '0', 10);
+      if (!videoId) return;
+      selectors.forEach(button => {
+        const selected = button === selector;
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      if (currentNumber) currentNumber.textContent = String(selectors.indexOf(selector) + 1).padStart(2, '0');
+      player.title = selector.dataset.videoTitle || 'Robotic exoskeleton project video';
+      const title = $('.exo-video-selector-copy strong', selector);
+      const description = $('.exo-video-selector-copy span', selector);
+      const currentTitle = $('.exo-video-now strong', videoStrip);
+      const currentDescription = $('.exo-video-now small', videoStrip);
+      if (currentTitle && title) currentTitle.textContent = title.textContent;
+      if (currentDescription && description) currentDescription.textContent = description.textContent;
+      player.src = buildVideoUrl(videoId, shouldPlay, startAt);
     }
-    thumbs.forEach((b, n) => {
-      const selected = n === i;
-      b.setAttribute('aria-selected', String(selected));
-      b.tabIndex = selected ? 0 : -1;
-    });
-    const info = $('.exo-video-info', panel);
-    if (info) {
-      const em = $('em', info), strong = $('strong', info), span = $('span', info);
-      if (em) em.textContent = `VIDEO ${String(i + 1).padStart(2, '0')} / ${String(thumbs.length).padStart(2, '0')}`;
-      if (strong) strong.textContent = title;
-      if (span) span.textContent = desc;
-    }
-  }
 
-  document.addEventListener('click', event => {
-    const modeBtn = event.target.closest('[data-media-mode]');
-    if (modeBtn) {
-      const gallery = modeBtn.closest('.exo-gallery');
-      if (gallery) {
+    selectors.forEach((selector, index) => {
+      selector.addEventListener('click', () => selectVideo(selector));
+      selector.addEventListener('keydown', event => {
+        const steps = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1};
+        let next;
+        if (event.key in steps) next = (index + steps[event.key] + selectors.length) % selectors.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = selectors.length - 1;
+        else return;
         event.preventDefault();
-        setMode(gallery, modeBtn.dataset.mediaMode);
-      }
-      return;
-    }
-    const videoBtn = event.target.closest('.exo-video-thumbs button[data-video-id]');
-    if (videoBtn) {
-      const gallery = videoBtn.closest('.exo-gallery');
-      if (gallery) {
-        event.preventDefault();
-        setMode(gallery, 'videos');
-        selectVideo(gallery, videoBtn);
-      }
-    }
-  });
+        selectors[next].focus();
+        selectVideo(selectors[next]);
+      });
+    });
 
-  $$('.exo-gallery').forEach(gallery => {
-    if (!$('.exo-video-panel', gallery)) return;
-    const mediaTabs = $$('.exo-media-tabs button', gallery);
-    const videoTabs = $$('.exo-video-thumbs button', gallery);
-    const moveSelection = (tabs, index, event) => {
-      const steps = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1};
-      let next;
-      if (event.key in steps) next = (index + steps[event.key] + tabs.length) % tabs.length;
-      else if (event.key === 'Home') next = 0;
-      else if (event.key === 'End') next = tabs.length - 1;
-      else return;
-      event.preventDefault();
-      tabs[next].focus();
-      tabs[next].click();
-    };
-    mediaTabs.forEach((tab, index) => tab.addEventListener('keydown', event => moveSelection(mediaTabs, index, event)));
-    videoTabs.forEach((tab, index) => tab.addEventListener('keydown', event => moveSelection(videoTabs, index, event)));
-    const initialVideo = videoTabs.find(tab => tab.getAttribute('aria-selected') === 'true') || videoTabs[0];
-    if (initialVideo) selectVideo(gallery, initialVideo, false);
-    setMode(gallery, 'images');
+    const initial = selectors.find(selector => selector.getAttribute('aria-selected') === 'true') || selectors[0];
+    selectVideo(initial, false);
   });
 })();

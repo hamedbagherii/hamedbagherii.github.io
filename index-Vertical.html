@@ -16,7 +16,7 @@
   </title>
 <link href="https://hamedbagheri.dev/" rel="canonical"/>
 <link href="./assets/index-DcgeGm5t.css" rel="stylesheet"/>
-<link href="./assets/static-enhancements.css?v=12" rel="stylesheet"/>
+<link href="./assets/static-enhancements.css?v=23" rel="stylesheet"/>
 <style id="portfolio-refinement-v5">
    :root {
     --portfolio-bg: #0a0f16;
@@ -1173,7 +1173,7 @@
       HAMED_BAGHERI.ENG
      </span>
 </button>
-<nav aria-label="Primary navigation">
+<nav aria-label="Primary navigation" id="primary-navigation">
 <button class="">
 <span class="nav-label">
        About
@@ -1215,6 +1215,11 @@
       </span>
 </button>
 </nav>
+<button aria-controls="primary-navigation" aria-expanded="false" aria-label="Open navigation menu" class="mobile-nav-toggle" type="button">
+<span aria-hidden="true"></span>
+<span aria-hidden="true"></span>
+<span aria-hidden="true"></span>
+</button>
 <a class="header-cta" href="mailto:h.bagheri.71@gmail.com">
      INIT CONTACT
      <span>
@@ -1500,10 +1505,6 @@
 </div>
 </div>
 <div aria-label="Medical exoskeleton project gallery" class="exo-gallery">
-<div class="exo-media-tabs" role="tablist" aria-label="Project media type">
-<button class="active" id="exo-images-tab" type="button" role="tab" aria-selected="true" aria-controls="exo-images-panel" tabindex="0" data-media-mode="images">IMAGES · 05</button>
-<button id="exo-videos-tab" type="button" role="tab" aria-selected="false" aria-controls="exo-videos-panel" tabindex="-1" data-media-mode="videos">VIDEOS · 05</button>
-</div>
 <div class="exo-gallery-context">
 <span>
          PLATFORM EVOLUTION
@@ -1512,7 +1513,6 @@
          MULTIPLE GENERATIONS · ONE CONTINUOUS SYSTEM PROGRAM
         </strong>
 </div>
-<div class="exo-images-panel" id="exo-images-panel" role="tabpanel" aria-labelledby="exo-images-tab">
 <div class="exo-gallery-stage">
 <button aria-label="Open Multiple generations in full screen" class="exo-gallery-open" type="button">
 <img alt="Four Human in Motion Robotics lower-limb exoskeleton platforms in the development lab" height="1280" src="./assets/exo-platform-family.jpg" width="1920"/>
@@ -1601,20 +1601,18 @@
 </button>
 </div>
 </div>
-<div class="exo-video-panel" id="exo-videos-panel" role="tabpanel" aria-labelledby="exo-videos-tab" hidden>
-<div class="exo-video-main">
-<div class="exo-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/vOMn8qyuhpg?rel=0&amp;playsinline=1&amp;origin=https%3A%2F%2Fhamedbagheri.dev" title="Hands-free walking — robotic exoskeleton demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe></div>
-<div class="exo-video-info" aria-live="polite"><em>VIDEO 01 / 05</em><strong>Hands-free walking</strong><span>Real-world platform walking.</span></div>
-</div>
-<div class="exo-video-thumbs" role="tablist" aria-label="Choose a project video">
-<button type="button" role="tab" aria-selected="true" tabindex="0" data-video-id="vOMn8qyuhpg" data-video-title="Hands-free walking" data-video-desc="Real-world platform walking."><img src="./assets/video-hands-free-walking.jpg" alt=""><i aria-hidden="true">▶</i><span>01 · WALKING</span></button>
-<button type="button" role="tab" aria-selected="false" tabindex="-1" data-video-id="ZlrcPtzQ-3M" data-video-title="Dynamic balance test" data-video-desc="Balance performance under motion."><img src="./assets/video-dynamic-balance.jpg" alt=""><i aria-hidden="true">▶</i><span>02 · BALANCE</span></button>
-<button type="button" role="tab" aria-selected="false" tabindex="-1" data-video-id="DYMDQ00YPnQ" data-video-title="Joint actuation bring-up" data-video-desc="Integrated actuation testing."><img src="./assets/video-joint-actuation.jpg" alt=""><i aria-hidden="true">▶</i><span>03 · ACTUATION</span></button>
-<button type="button" role="tab" aria-selected="false" tabindex="-1" data-video-id="OOGeJYit_-U" data-video-title="Advanced rehabilitation" data-video-desc="Clinical mobility training."><img src="./assets/video-advanced-rehabilitation.jpg" alt=""><i aria-hidden="true">▶</i><span>04 · REHABILITATION</span></button>
-<button type="button" role="tab" aria-selected="false" tabindex="-1" data-video-id="q3o65fjHgag" data-video-title="XoMotion Now" data-video-desc="Technology in daily motion."><img src="./assets/video-xomotion-now.jpg" alt=""><i aria-hidden="true">▶</i><span>05 · PLATFORM</span></button>
-</div>
-</div>
-</div>
+<section class="exo-video-strip" aria-labelledby="exo-video-heading">
+<div class="exo-video-strip-header"><div class="exo-video-strip-label"><em>SYSTEM DEMONSTRATIONS</em><strong id="exo-video-heading">On-platform video highlights</strong></div><div class="exo-video-strip-meta" aria-live="polite"><span>SYSTEMS IN MOTION</span><strong><span class="exo-video-current">01</span> / 05</strong></div></div>
+<div class="exo-video-layout">
+<div class="exo-video-main"><div class="exo-video-feature"><iframe id="exo-featured-video" src="https://www.youtube-nocookie.com/embed/vOMn8qyuhpg?rel=0&amp;playsinline=1&amp;origin=https%3A%2F%2Fhamedbagheri.dev" title="Hands-free walking — robotic exoskeleton demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe></div><div class="exo-video-now" aria-live="polite"><span><em>Now playing</em><strong>Hands-free walking</strong></span><small>Real-world platform walking.</small></div></div>
+<div class="exo-video-selectors" role="tablist" aria-label="Choose a project video">
+<button class="exo-video-selector" type="button" role="tab" aria-selected="true" aria-controls="exo-featured-video" tabindex="0" data-video-id="vOMn8qyuhpg" data-video-title="Hands-free walking — robotic exoskeleton demonstration"><span class="exo-video-selector-thumb"><img src="./assets/video-hands-free-walking.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Demonstration</em><strong>Hands-free walking</strong><span>Real-world platform walking.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="exo-featured-video" tabindex="-1" data-video-id="ZlrcPtzQ-3M" data-video-title="Dynamic balance test — robotic exoskeleton verification"><span class="exo-video-selector-thumb"><img src="./assets/video-dynamic-balance.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Verification</em><strong>Dynamic balance test</strong><span>Balance performance under motion.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="exo-featured-video" tabindex="-1" data-video-id="DYMDQ00YPnQ" data-video-title="Joint actuation bring-up — exoskeleton development test"><span class="exo-video-selector-thumb"><img src="./assets/video-joint-actuation.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Development</em><strong>Joint actuation bring-up</strong><span>Integrated actuation testing.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="exo-featured-video" tabindex="-1" data-video-id="OOGeJYit_-U" data-video-title="Advanced exoskeleton rehabilitation — XoMotion"><span class="exo-video-selector-thumb"><img src="./assets/video-advanced-rehabilitation.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Rehabilitation</em><strong>Advanced rehabilitation</strong><span>Clinical mobility training.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="exo-featured-video" tabindex="-1" data-video-id="q3o65fjHgag" data-video-title="XoMotion Now — exoskeleton platform in motion"><span class="exo-video-selector-thumb"><img src="./assets/video-xomotion-now.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Platform</em><strong>XoMotion Now</strong><span>Technology in daily motion.</span></span></button>
+</div></div>
+</section>
 </article>
 <article class="project-card reverse" data-reveal="true">
 <div class="project-copy">
@@ -1801,8 +1799,41 @@
           KARO ELECTRICAL INTEGRATION
          </span>
 </button>
+<button aria-label="Show Karo Plus Dexterity Task" aria-selected="false" class="" role="tab" type="button" data-caption-label="ROBOCUP RESCUE 2018" data-caption-title="Karo Plus Dexterity Task" data-caption-desc="Karo Plus performing a dexterity and manipulation task at RoboCup Rescue 2018 in Canada.">
+<img alt="" height="100" src="./assets/mobile-karo-dexterity-canada.png" width="160"/>
+<span>10 · ROBOCUP DEXTERITY</span>
+</button>
+<button aria-label="Show End-Effector Workspace Evaluation" aria-selected="false" class="" role="tab" type="button" data-caption-label="MANIPULATOR WORKSPACE" data-caption-title="End-Effector Workspace Evaluation" data-caption-desc="Manipulator reach and end-effector workspace evaluation inside a vehicle during rescue-task testing.">
+<img alt="" height="100" src="./assets/mobile-karo-manipulator-workspace.png" width="160"/>
+<span>11 · MANIPULATOR WORKSPACE</span>
+</button>
+<button aria-label="Show Karo at Firefighter Training Camp" aria-selected="false" class="" role="tab" type="button" data-caption-label="FIELD VALIDATION" data-caption-title="Karo at Firefighter Training Camp" data-caption-desc="Karo undergoing mobility and field-validation testing at the Qazvin firefighters’ training camp in Iran.">
+<img alt="" height="100" src="./assets/mobile-karo-firefighter-training.png" width="160"/>
+<span>12 · FIELD VALIDATION</span>
+</button>
+<button aria-label="Show Robina Home Service Robot" aria-selected="false" class="" role="tab" type="button" data-caption-label="SERVICE ROBOTICS" data-caption-title="Robina Home Service Robot" data-caption-desc="Home-assistance robot developed at MRL’s @Home lab, combining Pioneer 3-AT mobility, perception, and a Kinova 6-DOF manipulator.">
+<img alt="" height="100" src="./assets/mobile-robina-home-robot.png" width="160"/>
+<span>13 · ROBINA HOME ROBOT</span>
+</button>
+<button aria-label="Show Robina Development and Demonstration" aria-selected="false" class="" role="tab" type="button" data-caption-label="HUMAN–ROBOT INTERACTION" data-caption-title="Robina Development and Demonstration" data-caption-desc="Robina during service-robot testing for shopping support, household assistance, and tasks designed to help older adults.">
+<img alt="" height="100" src="./assets/mobile-robina-team-demonstration.png" width="160"/>
+<span>14 · ROBINA DEMONSTRATION</span>
+</button>
 </div>
 </div>
+<section class="exo-video-strip mobile-video-strip" aria-labelledby="mobile-video-heading">
+<div class="exo-video-strip-header"><div class="exo-video-strip-label"><em>FIELD &amp; LAB DEMONSTRATIONS</em><strong id="mobile-video-heading">Mobile robotics video highlights</strong></div><div class="exo-video-strip-meta" aria-live="polite"><span>MOBILE SYSTEMS IN MOTION</span><strong><span class="exo-video-current">01</span> / 06</strong></div></div>
+<div class="exo-video-layout">
+<div class="exo-video-main"><div class="exo-video-feature"><iframe id="mobile-featured-video" src="https://www.youtube-nocookie.com/embed/i_7lMuh__iM?rel=0&amp;playsinline=1&amp;start=51&amp;origin=https%3A%2F%2Fhamedbagheri.dev" title="ARKA search-and-rescue robot demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe></div><div class="exo-video-now" aria-live="polite"><span><em>Now playing</em><strong>ARKA rescue platform</strong></span><small>Tracked mobility and manipulation.</small></div></div>
+<div class="exo-video-selectors" role="tablist" aria-label="Choose a mobile robotics video">
+<button class="exo-video-selector" type="button" role="tab" aria-selected="true" aria-controls="mobile-featured-video" tabindex="0" data-video-id="i_7lMuh__iM" data-video-start="51" data-video-title="ARKA search-and-rescue robot demonstration"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-arka.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Rescue platform</em><strong>ARKA rescue platform</strong><span>Tracked mobility and manipulation.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="mobile-featured-video" tabindex="-1" data-video-id="D8wxss3ov4A" data-video-title="Manipulator path planning and obstacle avoidance using MoveIt and ROS"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-moveit.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Autonomy</em><strong>MoveIt path planning</strong><span>Planning and obstacle avoidance.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="mobile-featured-video" tabindex="-1" data-video-id="7emDLChfB94" data-video-title="Hazardous-material detection with a mobile robot"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-hazmat.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Sensing</em><strong>Hazmat detection</strong><span>Remote hazardous-material sensing.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="mobile-featured-video" tabindex="-1" data-video-id="2dDeK9wTgyU" data-video-title="Karo tele-operated rescue robot"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-karo-teleop.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Teleoperation</em><strong>Karo teleoperation</strong><span>Remote rescue operations.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="mobile-featured-video" tabindex="-1" data-video-id="12lt7iTwJ1E" data-video-title="Adrina service-robot platform overview"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-adrina-overview.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Service robotics</em><strong>Adrina platform</strong><span>Autonomous service-robot platform.</span></span></button>
+<button class="exo-video-selector" type="button" role="tab" aria-selected="false" aria-controls="mobile-featured-video" tabindex="-1" data-video-id="dWiBbqnNJ6I" data-video-title="Adrina service-robot development highlights"><span class="exo-video-selector-thumb"><img src="./assets/mobile-video-adrina-showcase.jpg" alt=""><span aria-hidden="true" class="exo-video-selector-play">▶</span></span><span class="exo-video-selector-copy"><em>Development</em><strong>Adrina development</strong><span>MRL service-robot development.</span></span></button>
+</div></div>
+</section>
 </article>
 <article class="project-card" data-reveal="true">
 <div class="project-copy">
@@ -3096,7 +3127,7 @@
     </button>
 </footer>
 </main>
-<script defer="True" src="./assets/main.js?v=13">
+<script defer="True" src="./assets/main.js?v=21">
 </script>
 </body>
 </html>
