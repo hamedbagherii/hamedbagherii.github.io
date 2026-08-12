@@ -97,6 +97,82 @@
   matchMedia('(min-width: 1101px)').addEventListener('change', event => {
     if (event.matches) setMobileNavOpen(false);
   });
+
+  // Compact section navigator. Press "/" anywhere outside a form field.
+  const sectionNavigator = document.createElement('div');
+  sectionNavigator.className = 'section-navigator';
+  sectionNavigator.hidden = true;
+  sectionNavigator.setAttribute('role', 'dialog');
+  sectionNavigator.setAttribute('aria-modal', 'true');
+  sectionNavigator.setAttribute('aria-labelledby', 'section-navigator-title');
+  sectionNavigator.innerHTML = '<div class="section-navigator-panel"><header><span>QUICK NAVIGATION</span><kbd>/</kbd><button type="button" aria-label="Close section navigator">&times;</button></header><strong id="section-navigator-title">Jump to a section</strong><div class="section-navigator-list"></div><small>ARROW KEYS / TAB TO MOVE &middot; ENTER TO SELECT &middot; ESC TO CLOSE</small></div>';
+  const navigatorList = $('.section-navigator-list', sectionNavigator);
+  const navigatorClose = $('header button', sectionNavigator);
+  let navigatorTrigger = null;
+  sections.forEach((section, index) => {
+    const button = document.createElement('button');
+    const label = section.id === 'Awards' ? 'Highlights' : section.id;
+    button.type = 'button';
+    button.innerHTML = `<span>${String(index + 1).padStart(2, '0')}</span><strong>${label}</strong><i aria-hidden="true">&rarr;</i>`;
+    button.addEventListener('click', () => {
+      closeSectionNavigator();
+      scrollToSection(section);
+    });
+    navigatorList.appendChild(button);
+  });
+  document.body.appendChild(sectionNavigator);
+
+  const navigatorLaunch = document.createElement('button');
+  navigatorLaunch.type = 'button';
+  navigatorLaunch.className = 'section-navigator-launch';
+  navigatorLaunch.setAttribute('aria-label', 'Open section navigator');
+  navigatorLaunch.innerHTML = '<kbd>/</kbd><span>NAV</span>';
+  document.body.appendChild(navigatorLaunch);
+
+  function openSectionNavigator(trigger = document.activeElement) {
+    navigatorTrigger = trigger;
+    setMobileNavOpen(false);
+    sectionNavigator.hidden = false;
+    requestAnimationFrame(() => sectionNavigator.classList.add('open'));
+    $('.section-navigator-list button', sectionNavigator)?.focus();
+  }
+
+  function closeSectionNavigator(returnFocus = false) {
+    if (sectionNavigator.hidden) return;
+    sectionNavigator.classList.remove('open');
+    setTimeout(() => { sectionNavigator.hidden = true; }, 180);
+    if (returnFocus && navigatorTrigger instanceof HTMLElement) navigatorTrigger.focus();
+  }
+
+  navigatorLaunch.addEventListener('click', () => openSectionNavigator(navigatorLaunch));
+  navigatorClose.addEventListener('click', () => closeSectionNavigator(true));
+  sectionNavigator.addEventListener('click', event => {
+    if (event.target === sectionNavigator) closeSectionNavigator(true);
+  });
+  sectionNavigator.addEventListener('keydown', event => {
+    const buttons = $$('.section-navigator-list button', sectionNavigator);
+    const index = buttons.indexOf(document.activeElement);
+    if (event.key === 'Escape') { event.preventDefault(); closeSectionNavigator(true); return; }
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault(); buttons[(Math.max(index, 0) + 1) % buttons.length]?.focus();
+    }
+    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault(); buttons[(Math.max(index, 0) - 1 + buttons.length) % buttons.length]?.focus();
+    }
+    if (event.key === 'Tab') {
+      const focusable = [navigatorClose, ...buttons];
+      const current = focusable.indexOf(document.activeElement);
+      const next = event.shiftKey ? (current - 1 + focusable.length) % focusable.length : (current + 1) % focusable.length;
+      event.preventDefault(); focusable[next].focus();
+    }
+  });
+  addEventListener('keydown', event => {
+    const target = event.target;
+    const typing = target instanceof HTMLElement && (target.matches('input, textarea, select') || target.isContentEditable);
+    if (event.key === '/' && !typing && sectionNavigator.hidden) {
+      event.preventDefault(); openSectionNavigator(target);
+    }
+  });
   $('.brand')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
   $('footer button')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
   $('.hero-actions .primary-btn')?.addEventListener('click', () => scrollToSection($('#Projects')));
@@ -132,13 +208,14 @@
 
   $$('.exo-gallery').forEach(gallery => {
     const stageImg = $('.exo-gallery-stage img', gallery);
+    const stage = $('.exo-gallery-stage', gallery);
     const thumbs = $$('.exo-gallery-thumbs button', gallery);
     const prev = $('.exo-gallery-controls button:first-child', gallery);
     const next = $('.exo-gallery-controls button:last-child', gallery);
     const counter = $('.exo-gallery-controls span', gallery);
     const caption = $('.exo-gallery-caption', gallery);
     let index = Math.max(0, thumbs.findIndex(t => t.classList.contains('active')));
-    function show(i) {
+    function show(i, animate = true) {
       if (!thumbs.length || !stageImg) return;
       index = (i + thumbs.length) % thumbs.length;
       const thumb = thumbs[index], img = $('img', thumb);
@@ -155,11 +232,16 @@
         if (title && $('strong', caption)) $('strong', caption).textContent = title;
         if (desc && $('span', caption)) $('span', caption).textContent = desc;
       }
+      if (animate && stage) {
+        stage.classList.remove('media-switching');
+        requestAnimationFrame(() => stage.classList.add('media-switching'));
+        setTimeout(() => stage.classList.remove('media-switching'), 420);
+      }
     }
     thumbs.forEach((t,i) => t.addEventListener('click', () => show(i)));
     prev?.addEventListener('click', e => {e.stopPropagation(); show(index-1)});
     next?.addEventListener('click', e => {e.stopPropagation(); show(index+1)});
-    show(index);
+    show(index, false);
   });
 
   $$('.exo-gallery-thumbs button img, .exo-video-selector img').forEach(img => {
@@ -214,6 +296,8 @@
     lbNext.hidden = thumbs.length < 2;
     renderLb(Math.max(0, activeIndex));
     lb.classList.add('open');
+    lb.classList.add('is-opening');
+    setTimeout(() => lb.classList.remove('is-opening'), 360);
     document.body.classList.add('lightbox-open');
     lbClose.focus();
   }));
@@ -331,13 +415,28 @@
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
-  function buildVideoUrl(videoId, shouldPlay, startAt = 0) {
+  const videoDurations = {
+    vOMn8qyuhpg:'1:53', 'ZlrcPtzQ-3M':'1:15', DYMDQ00YPnQ:'1:55', 'OOGeJYit_-U':'0:20', q3o65fjHgag:'0:37',
+    i_7lMuh__iM:'4:36', D8wxss3ov4A:'1:13', '7emDLChfB94':'1:01', '2dDeK9wTgyU':'4:04', '12lt7iTwJ1E':'5:56', dWiBbqnNJ6I:'5:56'
+  };
+
+  $$('.exo-video-selector').forEach(selector => {
+    const duration = videoDurations[selector.dataset.videoId];
+    const thumb = $('.exo-video-selector-thumb', selector);
+    if (!duration || !thumb) return;
+    const badge = document.createElement('span');
+    badge.className = 'exo-video-duration';
+    badge.textContent = duration;
+    badge.setAttribute('aria-label', `Duration ${duration}`);
+    thumb.appendChild(badge);
+  });
+
+  function buildVideoUrl(videoId, shouldPlay) {
     const playerOrigin = /^https?:$/.test(location.protocol) ? location.origin : 'https://hamedbagheri.dev';
     const url = new URL(`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`);
     url.searchParams.set('rel', '0');
     url.searchParams.set('playsinline', '1');
     url.searchParams.set('origin', playerOrigin);
-    if (startAt > 0) url.searchParams.set('start', String(startAt));
     if (shouldPlay) url.searchParams.set('autoplay', '1');
     return url.toString();
   }
@@ -345,12 +444,12 @@
   $$('.exo-video-strip').forEach(videoStrip => {
     const player = $('.exo-video-feature iframe', videoStrip);
     const selectors = $$('.exo-video-selector', videoStrip);
+    const feature = $('.exo-video-feature', videoStrip);
     const currentNumber = $('.exo-video-current', videoStrip);
     if (!player || !selectors.length) return;
 
     function selectVideo(selector, shouldPlay = true) {
       const videoId = selector.dataset.videoId;
-      const startAt = Number.parseInt(selector.dataset.videoStart || '0', 10);
       if (!videoId) return;
       selectors.forEach(button => {
         const selected = button === selector;
@@ -365,7 +464,12 @@
       const currentDescription = $('.exo-video-now small', videoStrip);
       if (currentTitle && title) currentTitle.textContent = title.textContent;
       if (currentDescription && description) currentDescription.textContent = description.textContent;
-      player.src = buildVideoUrl(videoId, shouldPlay, startAt);
+      player.src = buildVideoUrl(videoId, shouldPlay);
+      if (shouldPlay && feature) {
+        feature.classList.remove('media-switching');
+        requestAnimationFrame(() => feature.classList.add('media-switching'));
+        setTimeout(() => feature.classList.remove('media-switching'), 420);
+      }
     }
 
     selectors.forEach((selector, index) => {
