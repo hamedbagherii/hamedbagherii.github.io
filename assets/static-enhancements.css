@@ -1029,3 +1029,55 @@ body.is-loading {
   .credential-caption strong{font-size:15px!important}
   .credential-caption span{font-size:9px!important}
 }
+
+/* Hero collision guard: size the headline for its grid track, not the viewport alone. */
+.hero > .hero-copy{
+  min-width:0!important;
+  max-width:100%!important;
+}
+.hero > .hero-copy > #hero-title{
+  width:100%!important;
+  max-width:100%!important;
+  font-size:clamp(54px,4.15vw,78px)!important;
+}
+.hero > .hero-copy > #hero-title .hero-highlight{
+  max-width:100%!important;
+}
+
+@media (max-width:1380px) and (min-width:1221px){
+  .hero > .hero-copy > #hero-title{
+    font-size:clamp(50px,4.05vw,56px)!important;
+  }
+}
+
+@media (max-width:1220px){
+  .hero{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .hero > .hero-copy{
+    width:min(100%,790px)!important;
+    justify-self:start!important;
+  }
+  .hero > .hero-copy > #hero-title{
+    font-size:clamp(52px,6.4vw,72px)!important;
+  }
+  .hero > .hero-copy > #hero-title .hero-highlight{
+    white-space:normal!important;
+  }
+  .hero > .hero-system{
+    width:min(520px,72vw)!important;
+    margin:16px auto 60px!important;
+    justify-self:center!important;
+  }
+}
+
+@media (max-width:700px){
+  .hero > .hero-copy > #hero-title{
+    font-size:clamp(42px,12vw,62px)!important;
+    line-height:1!important;
+  }
+  .hero > .hero-system{
+    width:min(100%,480px)!important;
+    margin:10px auto 48px!important;
+  }
+}
