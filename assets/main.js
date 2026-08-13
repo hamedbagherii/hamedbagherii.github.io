@@ -183,7 +183,7 @@
     const bar = $('.scroll-progress');
     if (bar) bar.style.width = `${progress}%`;
 
-    const marker = (siteHeader?.offsetHeight || 0) + Math.min(innerHeight * .35, 320);
+    const marker = (siteHeader?.offsetHeight || 0) + Math.min(innerHeight * .82, 760);
     let active = null;
     for (const s of sections) if (s.getBoundingClientRect().top <= marker) active = s;
     if (Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 4) active = sections.at(-1) || active;
@@ -221,6 +221,8 @@
       const thumb = thumbs[index], img = $('img', thumb);
       stageImg.src = img.src;
       stageImg.alt = thumb.dataset.imageAlt || thumb.dataset.captionDesc || thumb.dataset.captionTitle || thumb.getAttribute('aria-label')?.replace(/^Show\s+/i, '') || '';
+      const openButton = $('.exo-gallery-open', gallery);
+      if (openButton) openButton.setAttribute('aria-label', `Open ${thumb.dataset.captionTitle || stageImg.alt} in full screen`);
       thumbs.forEach((t,n) => { t.classList.toggle('active', n===index); t.setAttribute('aria-selected', n===index ? 'true':'false'); });
       if (counter) counter.textContent = `${String(index+1).padStart(2,'0')} / ${String(thumbs.length).padStart(2,'0')}`;
       const bits = $('span', thumb)?.textContent.split('·').map(x=>x.trim()) || [];
@@ -239,6 +241,17 @@
       }
     }
     thumbs.forEach((t,i) => t.addEventListener('click', () => show(i)));
+    thumbs.forEach((t,i) => t.addEventListener('keydown', e => {
+      if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key)) return;
+      e.preventDefault();
+      let next = i;
+      if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = thumbs.length - 1;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + thumbs.length) % thumbs.length;
+      else next = (i + 1) % thumbs.length;
+      show(next);
+      thumbs[next].focus();
+    }));
     prev?.addEventListener('click', e => {e.stopPropagation(); show(index-1)});
     next?.addEventListener('click', e => {e.stopPropagation(); show(index+1)});
     show(index, false);
@@ -301,6 +314,46 @@
     document.body.classList.add('lightbox-open');
     lbClose.focus();
   }));
+  const credentialEvidence = [
+    { year:'2018', place:'Montreal', title:'Rescue Competition · Second Place', action:'2ND PLACE CERTIFICATE', label:'2018 · ROBOCUP MONTRÉAL · TEAM CREDENTIAL', src:'./assets/credential-robocup-2018-second-place.png', alt:'RoboCup 2018 Rescue Competition second-place certificate awarded to Team MRL' },
+    { year:'2018', place:'Montreal', title:'Best-in-Class Dexterity', action:'DEXTERITY CERTIFICATE', label:'2018 · ROBOCUP MONTRÉAL · TEAM CREDENTIAL', src:'./assets/credential-robocup-2018-dexterity.png', alt:'RoboCup 2018 Best-in-Class Dexterity certificate awarded to Team MRL' },
+    { year:'2017', place:'Nagoya', title:'Best-in-Class Dexterity', action:'DEXTERITY CERTIFICATE', label:'2017 · ROBOCUP NAGOYA · TEAM CREDENTIAL', src:'./assets/credential-robocup-2017-dexterity.png', alt:'RoboCup 2017 Best-in-Class Dexterity certificate awarded to Team MRL' },
+    { year:'2016', place:'Leipzig', title:'Best-in-Class Exploration', action:'EXPLORATION CERTIFICATE', label:'2016 · ROBOCUP LEIPZIG · TEAM CREDENTIAL', src:'./assets/credential-robocup-2016-exploration.png', alt:'RoboCup 2016 Best-in-Class Exploration certificate awarded to Team MRL' },
+    { year:'2015', place:'Hefei', title:'Rescue Competition · First Place', action:'1ST PLACE CERTIFICATE', label:'2015 · ROBOCUP HEFEI · NAMED CREDENTIAL', src:'./assets/credential-robocup-2015-first-place.png', alt:'RoboCup 2015 Rescue Competition first-place certificate naming Hamed Bagheri and Team MRL' }
+  ];
+  credentialEvidence.forEach(item => {
+    const year = $$('.competition-year').find(group => $('time', group)?.textContent.trim() === item.year);
+    const entry = year && $$('.competition-entry', year).find(card => $('p', card)?.textContent.includes(item.place));
+    if (!entry) return;
+    let row = $('.credential-evidence-row', entry);
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'credential-evidence-row';
+      row.setAttribute('aria-label', `Verified credentials for RoboCup ${item.year} ${item.place}`);
+      entry.appendChild(row);
+    }
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'credential-evidence';
+    button.setAttribute('aria-label', `Open ${item.action.toLowerCase()}`);
+    button.innerHTML = `<img class="credential-evidence-preview" src="${item.src}" alt="" aria-hidden="true"><span class="credential-evidence-copy"><small>VERIFIED DOCUMENT</small><strong>${item.action}</strong></span><span class="credential-evidence-arrow" aria-hidden="true">↗</span>`;
+    button.addEventListener('click', () => {
+      lbGallery = null;
+      lbTrigger = button;
+      lbImg.src = item.src;
+      lbImg.alt = item.alt;
+      lbLabel.textContent = item.label;
+      lbTitle.textContent = item.title;
+      lbCounter.textContent = 'VERIFIED AWARD';
+      lbPrev.hidden = true;
+      lbNext.hidden = true;
+      lb.classList.add('open', 'is-opening');
+      setTimeout(() => lb.classList.remove('is-opening'), 360);
+      document.body.classList.add('lightbox-open');
+      lbClose.focus();
+    });
+    row.appendChild(button);
+  });
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
   lbNext.addEventListener('click', () => renderLb(lbIndex + 1));
@@ -321,6 +374,10 @@
     const ctx = particleCanvas.getContext('2d');
     let particles = [];
     let width = 0, height = 0, dpr = 1, frameId = 0;
+    let nextParticleId = 0;
+    const connectionStates = new Map();
+    const pointer = { x: 0, y: 0, drawX: 0, drawY: 0, lastX: 0, lastY: 0, speed: 0, active: false, initialized: false };
+    const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     function particleCount() {
       const area = width * height;
@@ -332,6 +389,7 @@
       const speed = innerWidth < 780 ? 0.055 : 0.075;
       const angle = Math.random() * Math.PI * 2;
       return {
+        id: nextParticleId++,
         x: Math.random() * width,
         y: Math.random() * height,
         vx: Math.cos(angle) * speed * (0.45 + Math.random()),
@@ -384,6 +442,90 @@
         }
       }
 
+      if (pointer.active) {
+        pointer.drawX += (pointer.x - pointer.drawX) * 0.18;
+        pointer.drawY += (pointer.y - pointer.drawY) * 0.18;
+        const connectionRadius = 270;
+        const connected = particles
+          .map(p => ({ p, distance: Math.hypot(p.x - pointer.drawX, p.y - pointer.drawY) }))
+          .filter(item => item.distance < connectionRadius)
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 4);
+
+        const selectedIds = new Set(connected.map(({ p }) => p.id));
+        connectionStates.forEach(state => { state.target = selectedIds.has(state.p.id) ? state.target : 0; });
+        connected.forEach(({ p, distance }, index) => {
+          const hierarchy = [0.68, 0.48, 0.34, 0.25][index];
+          let state = connectionStates.get(p.id);
+          if (!state) {
+            state = { p, alpha: 0, target: 0, rank: index, phase: (p.id * 0.23) % 1, previousPhase: 0, acknowledgeUntil: 0 };
+            connectionStates.set(p.id, state);
+          }
+          state.p = p;
+          state.rank = index;
+          state.target = (1 - distance / connectionRadius) * hierarchy;
+        });
+
+        if (connected.length) {
+          ctx.beginPath();
+          ctx.arc(pointer.drawX, pointer.drawY, 3.2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 157, 58, 0.78)';
+          ctx.shadowColor = 'rgba(255, 157, 58, 0.52)';
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      } else {
+        connectionStates.forEach(state => { state.target = 0; });
+      }
+
+      connectionStates.forEach((state, id) => {
+        state.alpha += (state.target - state.alpha) * (state.target > state.alpha ? 0.12 : 0.075);
+        if (state.alpha < 0.004 && state.target === 0) {
+          connectionStates.delete(id);
+          return;
+        }
+
+        const p = state.p;
+        const dx = p.x - pointer.drawX;
+        const dy = p.y - pointer.drawY;
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        const edgeFade = Math.min(1, pointer.drawX / 80, (width - pointer.drawX) / 80, pointer.drawY / 80, (height - pointer.drawY) / 80);
+        const bend = Math.min(13, 3 + pointer.speed * 0.24) * (state.rank % 2 ? -1 : 1);
+        const controlX = (pointer.drawX + p.x) * 0.5 - (dy / distance) * bend;
+        const controlY = (pointer.drawY + p.y) * 0.5 + (dx / distance) * bend;
+        const visibleAlpha = state.alpha * Math.max(0, edgeFade);
+
+        ctx.beginPath();
+        ctx.moveTo(pointer.drawX, pointer.drawY);
+        ctx.quadraticCurveTo(controlX, controlY, p.x, p.y);
+        ctx.strokeStyle = `rgba(255, 157, 58, ${visibleAlpha})`;
+        ctx.lineWidth = state.rank === 0 ? 1.2 : 0.75;
+        ctx.stroke();
+
+        state.previousPhase = state.phase;
+        state.phase = (time * (0.00025 + state.rank * 0.000025) + p.id * 0.19) % 1;
+        if (state.phase < state.previousPhase) state.acknowledgeUntil = time + 300;
+        const t = state.phase;
+        const mt = 1 - t;
+        const signalX = mt * mt * pointer.drawX + 2 * mt * t * controlX + t * t * p.x;
+        const signalY = mt * mt * pointer.drawY + 2 * mt * t * controlY + t * t * p.y;
+        ctx.beginPath();
+        ctx.arc(signalX, signalY, state.rank === 0 ? 2 : 1.45, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 190, 118, ${Math.min(0.92, visibleAlpha * 1.8)})`;
+        ctx.shadowColor = 'rgba(255, 157, 58, 0.62)';
+        ctx.shadowBlur = 7 + Math.min(5, pointer.speed * 0.12);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        const acknowledgement = Math.max(0, (state.acknowledgeUntil - time) / 300);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r + 2.2 + (1 - acknowledgement) * 4, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255, 157, 58, ${visibleAlpha * (0.38 + acknowledgement * 0.62)})`;
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      });
+
       particles.forEach(p => {
         const pulse = 0.72 + Math.sin(time * 0.0007 + p.pulse) * 0.20;
         ctx.beginPath();
@@ -400,6 +542,30 @@
 
     resizeParticles();
     addEventListener('resize', resizeParticles, { passive: true });
+    if (finePointer) {
+      hero.addEventListener('pointermove', event => {
+        const rect = hero.getBoundingClientRect();
+        pointer.x = event.clientX - rect.left;
+        pointer.y = event.clientY - rect.top;
+        if (!pointer.initialized) {
+          pointer.drawX = pointer.x;
+          pointer.drawY = pointer.y;
+          pointer.lastX = pointer.x;
+          pointer.lastY = pointer.y;
+          pointer.initialized = true;
+        }
+        const movement = Math.hypot(pointer.x - pointer.lastX, pointer.y - pointer.lastY);
+        pointer.speed += (Math.min(36, movement) - pointer.speed) * 0.2;
+        pointer.lastX = pointer.x;
+        pointer.lastY = pointer.y;
+        pointer.active = true;
+      }, { passive: true });
+      hero.addEventListener('pointerleave', () => {
+        pointer.active = false;
+        pointer.initialized = false;
+        pointer.speed = 0;
+      }, { passive: true });
+    }
     frameId = requestAnimationFrame(drawParticles);
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) cancelAnimationFrame(frameId);

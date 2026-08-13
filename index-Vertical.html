@@ -16,7 +16,7 @@
   </title>
 <link href="https://hamedbagheri.dev/" rel="canonical"/>
 <link href="./assets/index-DcgeGm5t.css" rel="stylesheet"/>
-<link href="./assets/static-enhancements.css?v=27" rel="stylesheet"/>
+<link href="./assets/static-enhancements.css?v=32" rel="stylesheet"/>
 <style id="portfolio-refinement-v5">
    :root {
     --portfolio-bg: #0a0f16;
@@ -1135,6 +1135,51 @@
 }
 </style>
 
+<style id="awards-section-frame-alignment">
+/* Keep Honors & Awards on the same content frame as adjacent sections. */
+.awards-section {
+  width: min(1480px, calc(100% - 48px)) !important;
+  max-width: none !important;
+  margin-inline: auto !important;
+  padding: 128px 0 !important;
+  grid-template-columns: 190px minmax(0, 1fr) !important;
+  column-gap: 52px !important;
+}
+.awards-section > .section-label {
+  width: 190px !important;
+}
+.awards-section > .section-label > span {
+  color: #3f4941 !important;
+  font: 700 var(--section-number-size, 30px)/1 var(--mono) !important;
+  letter-spacing: -.04em !important;
+  text-shadow: none !important;
+}
+.awards-section > .section-label.is-active > span {
+  color: var(--green) !important;
+  opacity: 1 !important;
+  text-shadow: 0 0 10px #ff9d3a9e, 0 0 28px #ff9d3a38 !important;
+}
+.awards-section > .section-label > small {
+  color: #607067 !important;
+  font: 600 12px var(--mono) !important;
+  line-height: normal !important;
+}
+.awards-section > .section-label > h2 {
+  color: #f4f6f8 !important;
+  font: 600 clamp(27px, 2.2vw, 34px)/1.05 var(--sans) !important;
+  letter-spacing: -.04em !important;
+  white-space: normal !important;
+}
+@media (max-width: 900px) {
+  .awards-section {
+    width: calc(100% - 32px) !important;
+    padding: 90px 0 !important;
+  }
+  .awards-section > .section-label {
+    width: auto !important;
+  }
+}
+</style>
 </head>
 <body class="is-loading">
 <div aria-label="Loading portfolio" aria-live="polite" id="system-loader" role="status">
@@ -2804,6 +2849,26 @@
 </div>
 </section>
 </div>
+<section aria-labelledby="selected-credentials-title" class="credential-gallery exo-gallery" data-reveal="true">
+<header class="credential-heading">
+<div><span>VERIFIED RECOGNITION</span><h3 id="selected-credentials-title">Selected Credentials</h3></div>
+<p>Five representative team and named awards from international RoboCup competitions.</p>
+</header>
+<div class="credential-viewer">
+<div class="exo-gallery-stage credential-stage">
+<button aria-label="Open 2018 Best-in-Class Dexterity certificate in full screen" class="exo-gallery-open" type="button">
+<img alt="RoboCup 2018 Best-in-Class Dexterity certificate awarded to Team MRL" height="1086" src="./assets/credential-robocup-2018-dexterity.png" width="1450"/>
+<span aria-hidden="true" class="image-expand-hint">VIEW CREDENTIAL &#8599;</span>
+</button>
+<div class="exo-gallery-caption credential-caption"><em>2018 · ROBOCUP MONTRÉAL</em><strong>Best-in-Class Dexterity</strong><span>Team credential · Rescue Robot League · MRL</span></div>
+</div>
+<div aria-label="Select a RoboCup credential" class="exo-gallery-thumbs credential-thumbs" role="tablist">
+<button aria-label="Show 2018 Best-in-Class Dexterity certificate" aria-selected="true" data-caption-desc="Team credential · Rescue Robot League · MRL" data-caption-label="2018 · ROBOCUP MONTRÉAL" data-caption-title="Best-in-Class Dexterity" data-image-alt="RoboCup 2018 Best-in-Class Dexterity certificate awarded to Team MRL" role="tab" type="button"><img alt="" height="100" src="./assets/credential-robocup-2018-dexterity.png" width="160"/><span><b>2018</b><strong>Best-in-Class Dexterity</strong><small>TEAM CREDENTIAL</small></span></button>
+<button aria-label="Show 2018 Rescue Competition second-place certificate" aria-selected="false" data-caption-desc="Team credential · Rescue Robot League · MRL" data-caption-label="2018 · ROBOCUP MONTRÉAL" data-caption-title="Rescue Competition · Second Place" data-image-alt="RoboCup 2018 Rescue Competition second-place certificate awarded to Team MRL" role="tab" type="button"><img alt="" height="100" src="./assets/credential-robocup-2018-second-place.png" width="160"/><span><b>2018</b><strong>Rescue Competition · 2nd Place</strong><small>TEAM CREDENTIAL</small></span></button>
+<button aria-label="Show 2017 Best-in-Class Dexterity certificate" aria-selected="false" data-caption-desc="Team credential · RoboCup Rescue Robot · MRL" data-caption-label="2017 · ROBOCUP NAGOYA" data-caption-title="Best-in-Class Dexterity" data-image-alt="RoboCup 2017 Best-in-Class Dexterity certificate awarded to Team MRL" role="tab" type="button"><img alt="" height="100" src="./assets/credential-robocup-2017-dexterity.png" width="160"/><span><b>2017</b><strong>Best-in-Class Dexterity</strong><small>TEAM CREDENTIAL</small></span></button>
+<button aria-label="Show 2016 Best-in-Class Exploration certificate" aria-selected="false" data-caption-desc="Team credential · Rescue Robot League · MRL" data-caption-label="2016 · ROBOCUP LEIPZIG" data-caption-title="Best-in-Class Exploration" data-image-alt="RoboCup 2016 Best-in-Class Exploration certificate awarded to Team MRL" role="tab" type="button"><img alt="" height="100" src="./assets/credential-robocup-2016-exploration.png" width="160"/><span><b>2016</b><strong>Best-in-Class Exploration</strong><small>TEAM CREDENTIAL</small></span></button>
+<button aria-label="Show 2015 Rescue Competition first-place certificate" aria-selected="false" data-caption-desc="Named credential · Rescue Robot League · Team MRL" data-caption-label="2015 · ROBOCUP HEFEI" data-caption-title="Rescue Competition · First Place" data-image-alt="RoboCup 2015 Rescue Competition first-place certificate naming Hamed Bagheri and Team MRL" role="tab" type="button"><img alt="" height="100" src="./assets/credential-robocup-2015-first-place.png" width="160"/><span><b>2015</b><strong>Rescue Competition · 1st Place</strong><small>NAMED CREDENTIAL</small></span></button>
+</div></div></section>
 </section>
 <section class="content-section publications-section" id="Publications">
 <div class="section-label">
@@ -3127,7 +3192,7 @@
     </button>
 </footer>
 </main>
-<script defer="True" src="./assets/main.js?v=22">
+<script defer="True" src="./assets/main.js?v=33">
 </script>
 </body>
 </html>
