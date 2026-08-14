@@ -447,7 +447,7 @@
     const clearFilter = document.createElement('button');
     clearFilter.type = 'button';
     clearFilter.className = 'honors-filter-clear';
-    clearFilter.innerHTML = '<span aria-hidden="true">×</span> SHOW ALL RESULTS';
+    clearFilter.innerHTML = '<span class="honors-filter-all-icon" aria-hidden="true"></span> SHOW ALL RESULTS';
     clearFilter.hidden = true;
     filterBar.append(filterStatus, clearFilter);
     awardsLedger.parentNode.insertBefore(filterBar, awardsLedger);
