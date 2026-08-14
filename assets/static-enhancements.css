@@ -2139,12 +2139,12 @@ main .honors-accordion .technical-awards ul{
 }
 main .honors-accordion .technical-awards li{
   position:relative;
-  padding:4px 9px!important;
+  padding:5px 10px!important;
   border:1px solid rgba(240,165,87,.32)!important;
   border-radius:2px;
   background:rgba(240,165,87,.075)!important;
   color:var(--portfolio-accent,#f0a557)!important;
-  font:600 10px/1.2 var(--mono)!important;
+  font:600 11.5px/1.25 var(--mono)!important;
   transition:background-color .18s ease,border-color .18s ease,color .18s ease!important;
 }
 main .honors-accordion .technical-awards li+li::before{
@@ -2201,6 +2201,9 @@ main .honors-accordion .competition-entry:hover .technical-awards li{
   }
   main .honors-accordion .technical-awards>span{
     margin-top:1px;
+  }
+  main .honors-accordion .technical-awards li{
+    font-size:10.5px!important;
   }
 }
 @media(prefers-reduced-motion:reduce){
