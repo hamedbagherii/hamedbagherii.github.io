@@ -355,6 +355,22 @@
     row.appendChild(button);
   });
   const awardsLedger = $('.competition-ledger');
+  const medalClasses = ['medal-gold', 'medal-silver', 'medal-bronze'];
+  $$('.achievement-summary article').slice(0, 3).forEach((summary, index) => {
+    const medal = document.createElement('span');
+    medal.className = `placement-medal placement-medal-summary ${medalClasses[index]}`;
+    medal.setAttribute('aria-hidden', 'true');
+    summary.insertBefore(medal, summary.firstChild);
+  });
+  $$('.competition-result', awardsLedger).forEach(result => {
+    const placement = result.getAttribute('aria-label') || '';
+    const medalIndex = /1st place/i.test(placement) ? 0 : /2nd place/i.test(placement) ? 1 : /3rd place/i.test(placement) ? 2 : -1;
+    if (medalIndex < 0) return;
+    const medal = document.createElement('span');
+    medal.className = `placement-medal ${medalClasses[medalIndex]}`;
+    medal.setAttribute('aria-hidden', 'true');
+    result.insertBefore(medal, result.firstChild);
+  });
   const awardYears = awardsLedger ? $$('.competition-year', awardsLedger) : [];
   if (awardsLedger && awardYears.length) {
     awardsLedger.classList.add('honors-accordion');

@@ -2213,3 +2213,75 @@ main .honors-accordion .competition-entry:hover .technical-awards li{
     transition:none;
   }
 }
+
+/* Honors placement medals: consistent CSS-drawn gold, silver and bronze marks. */
+main .placement-medal{
+  --medal-color:#e6b84f;
+  --medal-edge:#ffdc7a;
+  position:relative;
+  display:inline-block;
+  flex:0 0 18px;
+  width:18px;
+  height:21px;
+  margin-right:7px;
+  vertical-align:middle;
+}
+main .placement-medal::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  left:3px;
+  bottom:0;
+  width:12px;
+  height:12px;
+  border:1px solid var(--medal-edge);
+  border-radius:50%;
+  background:var(--medal-color);
+  box-shadow:inset 0 0 0 2px rgba(10,15,22,.16);
+}
+main .placement-medal::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:4px;
+  width:10px;
+  height:12px;
+  background:linear-gradient(90deg,var(--medal-color) 0 42%,rgba(10,15,22,.32) 42% 58%,var(--medal-color) 58%);
+  clip-path:polygon(0 0,100% 0,77% 100%,50% 76%,23% 100%);
+}
+main .placement-medal.medal-silver{
+  --medal-color:#aeb7c2;
+  --medal-edge:#dce2e8;
+}
+main .placement-medal.medal-bronze{
+  --medal-color:#b77945;
+  --medal-edge:#dca16d;
+}
+main .placement-medal-summary{
+  flex-basis:23px;
+  width:23px;
+  height:27px;
+  margin:0 0 8px;
+}
+main .placement-medal-summary::before{
+  left:3px;
+  width:17px;
+  height:17px;
+}
+main .placement-medal-summary::after{
+  left:5px;
+  width:13px;
+  height:14px;
+}
+main .achievement-summary article{
+  align-content:center;
+  justify-items:center;
+}
+main .honors-accordion .competition-result{
+  display:inline-flex!important;
+  align-items:center;
+}
+main .honors-accordion .competition-result .placement-medal{
+  margin-left:1px;
+  margin-right:7px;
+}
