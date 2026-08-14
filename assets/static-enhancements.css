@@ -2125,12 +2125,12 @@ main .honors-accordion .technical-awards{
 main .honors-accordion .technical-awards>span{
   display:inline-flex!important;
   align-items:center;
-  min-height:20px;
-  padding:3px 7px!important;
-  border:1px solid var(--neutral-structure)!important;
-  color:var(--portfolio-muted,#707a73)!important;
-  font:700 8px/1 var(--mono)!important;
-  letter-spacing:.1em!important;
+  min-height:24px;
+  padding:4px 8px!important;
+  border:1px solid rgba(177,185,178,.24)!important;
+  color:var(--portfolio-secondary,#b1b9b2)!important;
+  font:700 10px/1 var(--mono)!important;
+  letter-spacing:.09em!important;
 }
 main .honors-accordion .technical-awards ul{
   display:flex!important;
