@@ -355,20 +355,57 @@
     row.appendChild(button);
   });
   const awardsLedger = $('.competition-ledger');
-  const earlierAwardYears = $$('.competition-year', awardsLedger).filter(group => Number($('time', group)?.textContent.trim()) <= 2016);
-  if (awardsLedger && earlierAwardYears.length) {
-    earlierAwardYears.forEach(group => { group.hidden = true; });
-    const historyToggle = document.createElement('button');
-    historyToggle.type = 'button';
-    historyToggle.className = 'honors-history-toggle';
-    historyToggle.setAttribute('aria-expanded', 'false');
-    historyToggle.textContent = 'VIEW EARLIER RESULTS · 2013–2016';
-    awardsLedger.insertBefore(historyToggle, earlierAwardYears[0]);
-    historyToggle.addEventListener('click', () => {
-      const expanded = historyToggle.getAttribute('aria-expanded') === 'true';
-      earlierAwardYears.forEach(group => { group.hidden = expanded; });
-      historyToggle.setAttribute('aria-expanded', String(!expanded));
-      historyToggle.textContent = expanded ? 'VIEW EARLIER RESULTS · 2013–2016' : 'HIDE EARLIER RESULTS · 2013–2016';
+  const awardYears = awardsLedger ? $$('.competition-year', awardsLedger) : [];
+  if (awardsLedger && awardYears.length) {
+    awardsLedger.classList.add('honors-accordion');
+
+    const setAwardYearOpen = (yearGroup, open, focus = false) => {
+      const toggle = $('.honors-year-toggle', yearGroup);
+      const panel = $('.competition-year-results', yearGroup);
+      yearGroup.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      $('.honors-year-action-label', toggle).textContent = open ? 'CLOSE' : 'VIEW';
+      panel.hidden = !open;
+      if (focus) toggle.focus();
+    };
+
+    awardYears.forEach((yearGroup, index) => {
+      const yearTime = $('time', yearGroup);
+      const results = $('.competition-year-results', yearGroup);
+      const entries = $$('.competition-entry', results);
+      const podiums = entries.filter(entry => {
+        const place = $('.competition-result', entry)?.getAttribute('aria-label') || '';
+        return /^(1st|2nd|3rd) place$/i.test(place);
+      }).length;
+      const technicalAwards = $$('.technical-awards li', results).length;
+      const summaryParts = [`${entries.length} ${entries.length === 1 ? 'EVENT' : 'EVENTS'}`];
+      if (podiums) summaryParts.push(`${podiums} ${podiums === 1 ? 'PODIUM' : 'PODIUMS'}`);
+      if (technicalAwards) summaryParts.push(`${technicalAwards} TECHNICAL ${technicalAwards === 1 ? 'AWARD' : 'AWARDS'}`);
+
+      const year = yearTime.textContent.trim();
+      const panelId = `honors-year-${year}`;
+      results.id = panelId;
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'honors-year-toggle';
+      toggle.setAttribute('aria-controls', panelId);
+      toggle.setAttribute('aria-label', `${year}: ${summaryParts.join(', ')}`);
+      toggle.innerHTML = `
+        <span class="honors-year-identity"></span>
+        <span class="honors-year-summary">${summaryParts.map(part => `<span class="honors-summary-part${part.includes('TECHNICAL') ? ' is-technical' : ''}">${part}</span>`).join('')}</span>
+        <span class="honors-year-action" aria-hidden="true">
+          <span class="honors-year-action-label">VIEW</span>
+          <i></i>
+        </span>`;
+      $('.honors-year-identity', toggle).appendChild(yearTime);
+      yearGroup.insertBefore(toggle, results);
+      setAwardYearOpen(yearGroup, index === 0);
+
+      toggle.addEventListener('click', () => {
+        const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
+        awardYears.forEach(group => setAwardYearOpen(group, group === yearGroup && willOpen));
+      });
     });
   }
   lbClose.addEventListener('click', closeLb);
