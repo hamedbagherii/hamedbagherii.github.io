@@ -2276,6 +2276,18 @@ main .placement-medal-summary::after{
 main .achievement-summary article{
   align-content:center;
   justify-items:center;
+  transition:transform .2s cubic-bezier(.2,.75,.25,1),background-color .18s ease,border-color .18s ease!important;
+}
+main .achievement-summary article:hover{
+  transform:translateY(-4px);
+  background:rgba(240,165,87,.035)!important;
+  border-color:rgba(240,165,87,.2)!important;
+}
+main .achievement-summary article .placement-medal{
+  transition:transform .2s cubic-bezier(.2,.75,.25,1);
+}
+main .achievement-summary article:hover .placement-medal{
+  transform:translateY(-2px);
 }
 main .honors-accordion .competition-result{
   display:inline-flex!important;
@@ -2284,4 +2296,20 @@ main .honors-accordion .competition-result{
 main .honors-accordion .competition-result .placement-medal{
   margin-left:1px;
   margin-right:7px;
+  transition:transform .18s ease;
+}
+main .honors-accordion .competition-entry:hover .competition-result .placement-medal{
+  transform:translateY(-2px);
+}
+@media(prefers-reduced-motion:reduce){
+  main .achievement-summary article,
+  main .achievement-summary article .placement-medal,
+  main .honors-accordion .competition-result .placement-medal{
+    transition:none!important;
+  }
+  main .achievement-summary article:hover,
+  main .achievement-summary article:hover .placement-medal,
+  main .honors-accordion .competition-entry:hover .competition-result .placement-medal{
+    transform:none!important;
+  }
 }
