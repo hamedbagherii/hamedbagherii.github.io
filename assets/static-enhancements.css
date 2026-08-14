@@ -1081,3 +1081,586 @@ body.is-loading {
     margin:10px auto 48px!important;
   }
 }
+
+/* Fixed-header clearance for in-page navigation. */
+.content-section[id]{
+  scroll-margin-top:76px;
+}
+.header-cta:focus-visible{
+  color:#0a0f16!important;
+  background:var(--portfolio-accent,#f0a557)!important;
+  border-color:var(--portfolio-accent,#f0a557)!important;
+  outline:2px solid var(--portfolio-text,#f4f6f8);
+  outline-offset:3px;
+}
+
+/*
+ * Portfolio neutral hierarchy.
+ * Header navigation intentionally keeps its original quieter palette.
+ */
+main.section-layout-vertical{
+  --portfolio-primary:#f4f6f8;
+  --portfolio-secondary:#b1b9b2;
+  --portfolio-muted:#707a73;
+  --portfolio-structure:rgba(255,255,255,.08);
+}
+
+/* Primary: titles and information that should be read first. */
+main .section-label h2,
+main .about-statement .lead,
+main .dossier dd,
+main .project-copy h3,
+main .career-card h3,
+main .skill-card h3,
+main .publication-content h3,
+main .education-list h3,
+main .contact-content h2,
+main .visual-caption strong,
+main .exo-gallery-caption strong,
+main .exo-video-info strong,
+main .exo-video-now strong,
+main .exo-video-selector-copy strong{
+  color:var(--portfolio-primary)!important;
+}
+
+/* Secondary: readable descriptions and supporting copy. */
+main .about-statement p:not(.lead),
+main .project-description,
+main .career-card>p:last-child,
+main .skill-card li,
+main .award-overview p,
+main .competition-entry-main p,
+main .publication-authors,
+main .publication-venue,
+main .education-list article>small,
+main .contact-content>p,
+main .visual-caption>span,
+main .exo-gallery-caption>span,
+main .exo-video-info>span,
+main .exo-video-now>small,
+main .exo-video-selector-copy>span{
+  color:var(--portfolio-secondary)!important;
+}
+
+/* Muted: metadata, dates, counters, labels, and static tags. */
+main .section-label small,
+main .project-meta,
+main .career-meta time,
+main .career-meta small,
+main .skill-head,
+main .publication-year,
+main .education-meta,
+main .contact-meta,
+main .dossier dt,
+main .tag-row span,
+main .visual-index,
+main .visual-caption small,
+main .award-overview>span,
+main .achievement-summary span,
+main .technical-awards>span,
+main .exo-video-strip-meta>span,
+main .exo-video-strip-meta>strong{
+  color:var(--portfolio-muted)!important;
+}
+
+/*
+ * Global neutral system — the complete visible interface uses these four roles.
+ * Opacity may vary for state, but no additional gray hue is introduced.
+ */
+:root{
+  --neutral-primary:#f4f6f8;
+  --neutral-secondary:#b1b9b2;
+  --neutral-muted:#707a73;
+  --neutral-structure:rgba(255,255,255,.08);
+}
+
+/* Header and global navigation. */
+.brand-name,
+.site-header nav button,
+.mobile-navigation button,
+.mobile-navigation a,
+.section-navigator-list button,
+.section-navigator-panel>small{
+  color:var(--neutral-muted)!important;
+}
+.site-header nav button:hover,
+.site-header nav button.active,
+.mobile-navigation button:hover,
+.mobile-navigation button:focus-visible,
+.section-navigator-list button:hover,
+.section-navigator-list button:focus-visible,
+.header-cta{
+  color:var(--neutral-primary)!important;
+}
+.site-header,
+.header-cta,
+.mobile-nav-toggle,
+.mobile-navigation,
+.section-navigator-panel,
+.section-navigator-list button{
+  border-color:var(--neutral-structure)!important;
+}
+
+/* Hero and global supporting information. */
+.hero h1,
+.portrait-hud span,
+.hero-metrics strong,
+.primary-btn,
+.secondary-btn,
+footer{
+  color:var(--neutral-primary)!important;
+}
+.hero-intro,
+.hero-metrics p{
+  color:var(--neutral-secondary)!important;
+}
+.hero-kicker,
+.hero-metrics span,
+.system-node span,
+.system-node b,
+.system-core span,
+footer span{
+  color:var(--neutral-muted)!important;
+}
+
+/* Gallery and video interface copy. */
+.exo-gallery-context strong,
+.exo-gallery-caption strong,
+.exo-video-strip-label strong,
+.exo-video-now strong,
+.exo-video-selector-copy strong,
+.portfolio-lightbox figcaption strong{
+  color:var(--neutral-primary)!important;
+}
+.exo-gallery-caption span,
+.exo-video-info span,
+.exo-video-now small,
+.exo-video-selector-copy>span{
+  color:var(--neutral-secondary)!important;
+}
+.exo-media-tabs button,
+.exo-video-strip-meta>span,
+.exo-video-strip-meta>strong,
+.exo-video-thumbs span,
+.portfolio-lightbox figcaption small{
+  color:var(--neutral-muted)!important;
+}
+.exo-media-tabs,
+.exo-media-tabs button,
+.exo-gallery-context,
+.exo-gallery-stage,
+.exo-gallery-thumb,
+.exo-video-shell,
+.exo-video-selector,
+.exo-video-now,
+.portfolio-lightbox button,
+.portfolio-lightbox figure{
+  border-color:var(--neutral-structure)!important;
+}
+
+/* Main section structure and inactive graphical details. */
+main .content-section,
+main .project-card,
+main .dossier,
+main .skill-card,
+main .publication-entry,
+main .education-list article,
+main .achievement-summary,
+main .competition-ledger,
+main .competition-year,
+main .tag-row span{
+  border-color:var(--neutral-structure)!important;
+}
+
+/* Retain orange interaction states after neutral defaults. */
+.header-cta:hover,
+.header-cta:focus-visible{
+  color:#0a0f16!important;
+  border-color:var(--portfolio-accent,#f0a557)!important;
+}
+.exo-media-tabs button[aria-selected="true"],
+.exo-video-selector[aria-selected="true"],
+.exo-video-selector:hover,
+.exo-video-selector:focus-visible,
+.portfolio-lightbox button:hover{
+  border-color:var(--portfolio-accent,#f0a557)!important;
+}
+
+/* Remaining component-specific neutral text mapped to the same roles. */
+.career-meta,
+.career-meta time,
+.career-meta small,
+.dossier-head,
+.dossier-head span,
+.skill-head>span,
+.award-overview>span,
+.credential-evidence,
+.credential-evidence-copy,
+.credential-evidence-copy small,
+.credential-evidence-arrow,
+.credential-heading p,
+.credential-thumbs b,
+.credential-thumbs small,
+.publication-venue span,
+.education-meta,
+.education-meta p,
+.education-list article>small b,
+.section-navigator-launch,
+.section-navigator-launch span{
+  color:var(--neutral-muted)!important;
+}
+main .section-label>span,
+main .awards-section>.section-label>span,
+main .awards-section>.section-label>small{
+  color:var(--neutral-muted)!important;
+}
+.credential-evidence-copy strong,
+.credential-heading h3,
+.credential-thumbs strong,
+.publication-authors strong,
+.image-expand-hint,
+.exo-gallery-controls span,
+.exo-gallery-thumbs button>span,
+.exo-video-duration,
+.portfolio-lightbox-close,
+.portfolio-lightbox-nav{
+  color:var(--neutral-primary)!important;
+}
+.credential-heading p,
+.credential-caption span{
+  color:var(--neutral-secondary)!important;
+}
+
+/* Orange remains the sole non-neutral state color. */
+.skill-card.is-active .skill-head>span,
+main .section-label.is-active>span,
+.credential-evidence:hover .credential-evidence-copy strong,
+.credential-thumbs button[aria-selected="true"] b,
+.credential-thumbs button[aria-selected="true"] small{
+  color:var(--portfolio-accent,#f0a557)!important;
+}
+
+/* Readability pass: enlarge only labels that rendered below a practical size. */
+.portrait-capabilities span{
+  font-size:10px!important;
+}
+main .tag-row span{
+  font-size:11.5px!important;
+  font-weight:650!important;
+  letter-spacing:.065em!important;
+  line-height:1.25!important;
+  padding:7px 8px!important;
+}
+.exo-gallery-context em,
+.exo-gallery-context strong,
+.exo-video-strip-label em,
+.exo-video-strip-meta>span,
+.exo-video-now em,
+.exo-video-selector-copy em{
+  font-size:10px!important;
+}
+.exo-gallery-thumbs button>span{
+  font-size:10px!important;
+  line-height:1.25!important;
+}
+.exo-video-duration{
+  font-size:10px!important;
+  padding:3px 6px!important;
+}
+.credential-evidence-copy small{
+  font-size:9px!important;
+  line-height:1.15!important;
+}
+.credential-evidence-copy strong{
+  font-size:10px!important;
+  line-height:1.25!important;
+}
+.credential-caption em,
+.credential-thumbs b,
+.credential-thumbs small{
+  font-size:10px!important;
+}
+.credential-thumbs strong{
+  font-size:13px!important;
+}
+.image-expand-hint,
+.credential-heading>span,
+.section-navigator-panel header,
+.section-navigator-list button span,
+.section-navigator-panel>small,
+.section-navigator-launch span{
+  font-size:10px!important;
+}
+.header-cta{
+  font-size:11px!important;
+}
+.competition-result sup{
+  font-size:8px!important;
+}
+
+/* Final visual calibration for content viewed at normal desktop distance. */
+main .skill-card li{
+  font-size:15px!important;
+  line-height:1.5!important;
+}
+
+/* Technical expertise test: balanced two-column capability matrix. */
+main .skills-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  border-top:1px solid var(--neutral-structure)!important;
+  border-left:1px solid var(--neutral-structure)!important;
+}
+main .skills-grid .skill-card{
+  min-height:220px!important;
+  padding:26px 28px 28px!important;
+  border:0!important;
+  border-right:1px solid var(--neutral-structure)!important;
+  border-bottom:1px solid var(--neutral-structure)!important;
+  background:transparent!important;
+  transform:none!important;
+  transition:background-color .2s ease!important;
+}
+main .skills-grid .skill-card:hover{
+  background:rgba(255,255,255,.018)!important;
+  transform:none!important;
+}
+main .skills-grid .skill-card h3,
+main .skills-grid .skill-card li,
+main .skills-grid .skill-card .skill-head>span{
+  transition:color .2s ease, text-shadow .2s ease!important;
+}
+main .skills-grid .skill-card:hover h3{
+  color:#fff!important;
+}
+main .skills-grid .skill-card:hover li{
+  color:var(--portfolio-primary)!important;
+}
+main .skills-grid .skill-card:hover .skill-head>span{
+  color:var(--portfolio-accent,#f0a557)!important;
+  text-shadow:0 0 8px rgba(240,165,87,.58),0 0 18px rgba(240,165,87,.22)!important;
+}
+main .skills-grid .skill-card ul{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+
+@media(max-width:780px){
+  main .skills-grid{
+    grid-template-columns:1fr!important;
+  }
+  main .skills-grid .skill-card{
+    min-height:0!important;
+    padding:22px 20px 24px!important;
+  }
+}
+
+/* Expertise layout trial: compact horizontal technical index. */
+main .skills-grid{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  border-left:0!important;
+}
+main .skills-grid .skill-card{
+  display:grid!important;
+  grid-template-columns:46px minmax(240px,.42fr) minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:18px!important;
+  min-height:76px!important;
+  padding:14px 4px 14px 0!important;
+  border-right:0!important;
+  background:transparent!important;
+}
+main .skills-grid .skill-card .skill-head{
+  display:contents!important;
+}
+main .skills-grid .skill-card .skill-head>span{
+  grid-column:1!important;
+  grid-row:1!important;
+  align-self:center!important;
+  padding-left:3px!important;
+  border-left:2px solid rgba(240,165,87,.34)!important;
+  color:var(--portfolio-muted)!important;
+  font-size:11px!important;
+  line-height:40px!important;
+}
+main .skills-grid .skill-card .skill-head>b{
+  display:none!important;
+}
+main .skills-grid .skill-card h3{
+  grid-column:2!important;
+  grid-row:1!important;
+  align-self:center!important;
+  margin:0!important;
+  font-size:17px!important;
+  line-height:1.28!important;
+  letter-spacing:-.025em!important;
+}
+main .skills-grid .skill-card ul{
+  grid-column:3!important;
+  grid-row:1!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:5px 0!important;
+  margin:0!important;
+}
+main .skills-grid .skill-card li{
+  display:inline-flex!important;
+  align-items:center!important;
+  width:auto!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+  letter-spacing:.055em!important;
+  white-space:nowrap!important;
+}
+main .skills-grid .skill-card li::before{
+  content:"·"!important;
+  position:static!important;
+  width:auto!important;
+  height:auto!important;
+  margin:0 6px!important;
+  color:var(--portfolio-muted)!important;
+  background:none!important;
+}
+main .skills-grid .skill-card li:first-child::before{
+  content:"▪"!important;
+  margin-left:0!important;
+  color:var(--portfolio-accent,#f0a557)!important;
+}
+main .skills-grid .skill-card:hover .skill-head>span{
+  color:var(--portfolio-accent,#f0a557)!important;
+  border-left-color:var(--portfolio-accent,#f0a557)!important;
+}
+
+@media(max-width:900px){
+  main .skills-grid .skill-card{
+    grid-template-columns:40px minmax(190px,.48fr) minmax(0,1fr)!important;
+    column-gap:14px!important;
+  }
+  main .skills-grid .skill-card h3{
+    font-size:16px!important;
+  }
+  main .skills-grid .skill-card li{
+    white-space:normal!important;
+  }
+}
+
+@media(max-width:780px){
+  main .skills-grid .skill-card{
+    grid-template-columns:36px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    gap:10px 12px!important;
+    padding:17px 4px 18px 0!important;
+  }
+  main .skills-grid .skill-card .skill-head>span{
+    grid-column:1!important;
+    grid-row:1 / span 2!important;
+    align-self:stretch!important;
+    line-height:1.3!important;
+    padding-top:3px!important;
+  }
+  main .skills-grid .skill-card h3{
+    grid-column:2!important;
+    grid-row:1!important;
+    font-size:17px!important;
+  }
+  main .skills-grid .skill-card ul{
+    grid-column:2!important;
+    grid-row:2!important;
+  }
+}
+/* Restore the approved two-column capability matrix after the index trial. */
+main .skills-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  border-top:1px solid var(--neutral-structure)!important;
+  border-left:1px solid var(--neutral-structure)!important;
+}
+main .skills-grid .skill-card{
+  display:block!important;
+  min-height:220px!important;
+  padding:26px 28px 28px!important;
+  border:0!important;
+  border-right:1px solid var(--neutral-structure)!important;
+  border-bottom:1px solid var(--neutral-structure)!important;
+  background:transparent!important;
+  transform:none!important;
+  transition:background-color .2s ease!important;
+}
+main .skills-grid .skill-card .skill-head{
+  display:flex!important;
+}
+main .skills-grid .skill-card .skill-head>span{
+  padding-left:0!important;
+  border-left:0!important;
+  color:var(--portfolio-muted)!important;
+  font-size:inherit!important;
+  line-height:inherit!important;
+}
+main .skills-grid .skill-card .skill-head>b{
+  display:inline!important;
+}
+main .skills-grid .skill-card h3{
+  margin:0 0 26px!important;
+  font-size:24px!important;
+  line-height:1.2!important;
+  letter-spacing:normal!important;
+}
+main .skills-grid .skill-card ul{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px 20px!important;
+  margin:0!important;
+}
+main .skills-grid .skill-card li{
+  display:list-item!important;
+  width:auto!important;
+  font-size:15px!important;
+  line-height:1.5!important;
+  letter-spacing:normal!important;
+  white-space:normal!important;
+}
+main .skills-grid .skill-card li::before{
+  content:""!important;
+  position:absolute!important;
+  width:3px!important;
+  height:3px!important;
+  margin:0!important;
+  background:var(--portfolio-accent,#f0a557)!important;
+}
+main .skills-grid .skill-card:hover .skill-head>span{
+  color:var(--portfolio-accent,#f0a557)!important;
+  border-left:0!important;
+  text-shadow:0 0 8px rgba(240,165,87,.58),0 0 18px rgba(240,165,87,.22)!important;
+}
+
+@media(max-width:780px){
+  main .skills-grid{
+    grid-template-columns:1fr!important;
+  }
+  main .skills-grid .skill-card{
+    display:block!important;
+    min-height:0!important;
+    padding:22px 20px 24px!important;
+  }
+  main .skills-grid .skill-card .skill-head>span,
+  main .skills-grid .skill-card h3,
+  main .skills-grid .skill-card ul{
+    display:initial!important;
+    grid-column:auto!important;
+    grid-row:auto!important;
+  }
+  main .skills-grid .skill-card .skill-head{
+    display:flex!important;
+  }
+  main .skills-grid .skill-card h3{
+    display:block!important;
+    margin-bottom:26px!important;
+  }
+  main .skills-grid .skill-card ul{
+    display:grid!important;
+  }
+}
+
+main .achievement-summary span{
+  font-size:12.5px!important;
+}
