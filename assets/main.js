@@ -439,10 +439,18 @@
       });
     });
 
+    const filterBar = document.createElement('div');
+    filterBar.className = 'honors-filter-bar';
     const filterStatus = document.createElement('p');
     filterStatus.className = 'honors-filter-status';
     filterStatus.setAttribute('aria-live', 'polite');
-    awardsLedger.parentNode.insertBefore(filterStatus, awardsLedger);
+    const clearFilter = document.createElement('button');
+    clearFilter.type = 'button';
+    clearFilter.className = 'honors-filter-clear';
+    clearFilter.innerHTML = '<span aria-hidden="true">×</span> SHOW ALL RESULTS';
+    clearFilter.hidden = true;
+    filterBar.append(filterStatus, clearFilter);
+    awardsLedger.parentNode.insertBefore(filterBar, awardsLedger);
 
     const applyPlacementFilter = placement => {
       activePlacementFilter = activePlacementFilter === placement ? '' : placement;
@@ -452,6 +460,7 @@
         button.setAttribute('aria-label', selected ? `Clear ${placement} results filter` : `Show only ${button.dataset.placementFilter} results`);
       });
       awardsLedger.classList.toggle('is-filtered', Boolean(activePlacementFilter));
+      clearFilter.hidden = !activePlacementFilter;
 
       awardYears.forEach((yearGroup, index) => {
         const entries = $$('.competition-entry', yearGroup);
@@ -467,13 +476,14 @@
       });
 
       filterStatus.textContent = activePlacementFilter
-        ? `SHOWING ${activePlacementFilter.toUpperCase()} RESULTS · SELECT AGAIN TO CLEAR`
+        ? `SHOWING ${activePlacementFilter.toUpperCase()} RESULTS`
         : '';
     };
 
     placementFilters.forEach(button => {
       button.addEventListener('click', () => applyPlacementFilter(button.dataset.placementFilter));
     });
+    clearFilter.addEventListener('click', () => applyPlacementFilter(activePlacementFilter));
   }
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
