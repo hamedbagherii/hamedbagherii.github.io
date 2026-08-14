@@ -801,6 +801,168 @@ body.is-loading {
   }
 }
 
+/* Experimental branch: simplified, stable awards ledger. */
+main .award-overview p{
+  font-size:16px!important;
+  line-height:1.55!important;
+}
+main .award-overview>span{
+  font-size:12px!important;
+  line-height:1.5!important;
+}
+main .competition-year{
+  display:grid!important;
+  grid-template-columns:76px minmax(0,1fr)!important;
+  column-gap:22px!important;
+  align-items:start!important;
+  padding:27px 4px!important;
+  background:transparent!important;
+  transform:none!important;
+  transition:background-color .2s ease!important;
+  will-change:auto!important;
+}
+main .competition-year:hover{
+  transform:none!important;
+  background:linear-gradient(90deg,rgba(240,165,87,.025),transparent 72%)!important;
+}
+main .competition-year>time{
+  grid-column:1!important;
+  margin:1px 0 0!important;
+  color:var(--portfolio-accent,#f0a557)!important;
+  opacity:1!important;
+  font-size:16px!important;
+  line-height:1!important;
+  text-shadow:none!important;
+}
+main .competition-year:hover>time{
+  color:var(--portfolio-accent,#f0a557)!important;
+  text-shadow:none!important;
+}
+main .competition-year-results{
+  grid-column:2!important;
+  display:grid!important;
+  gap:18px!important;
+}
+main .competition-entry{
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+main .competition-entry-main{
+  display:grid!important;
+  grid-template-columns:minmax(0,max-content) auto!important;
+  justify-content:start!important;
+  align-items:center!important;
+  gap:14px!important;
+}
+main .competition-entry-main p{
+  color:var(--portfolio-secondary,#b1b9b2)!important;
+  font-size:14px!important;
+  line-height:1.5!important;
+}
+main .competition-year:hover .competition-entry-main p{
+  color:var(--portfolio-primary,#f4f6f8)!important;
+}
+main .competition-result{
+  min-width:37px!important;
+  padding:4px 7px!important;
+  color:var(--portfolio-accent,#f0a557)!important;
+  background:transparent!important;
+  border:1px solid rgba(240,165,87,.38)!important;
+  box-shadow:none!important;
+}
+main .competition-result strong{
+  color:inherit!important;
+}
+main .competition-trophy{
+  display:none!important;
+}
+main .technical-awards{
+  display:flex!important;
+  align-items:baseline!important;
+  gap:9px!important;
+  margin-top:6px!important;
+}
+main .technical-awards>span{
+  color:var(--portfolio-muted,#707a73)!important;
+  font-size:9px!important;
+  letter-spacing:.12em!important;
+}
+main .technical-awards ul{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+  gap:4px 0!important;
+}
+main .technical-awards li{
+  color:var(--portfolio-secondary,#b1b9b2)!important;
+  background:transparent!important;
+  border:0!important;
+  padding:0!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+}
+main .technical-awards li+li::before{
+  content:"·";
+  color:rgba(240,165,87,.65);
+  margin:0 7px;
+}
+main .credential-evidence-row{
+  margin-top:9px!important;
+}
+main .credential-evidence{
+  background:rgba(255,255,255,.012)!important;
+}
+main .honors-history-toggle{
+  width:100%;
+  color:var(--portfolio-secondary,#b1b9b2);
+  background:transparent;
+  border:0;
+  border-bottom:1px solid var(--neutral-structure);
+  cursor:pointer;
+  padding:17px 4px;
+  font:700 11px/1.3 var(--mono);
+  letter-spacing:.11em;
+  text-align:left;
+  transition:color .18s ease,background-color .18s ease;
+}
+main .honors-history-toggle::before{
+  content:"+";
+  display:inline-block;
+  width:22px;
+  color:var(--portfolio-accent,#f0a557);
+}
+main .honors-history-toggle[aria-expanded="true"]::before{
+  content:"−";
+}
+main .honors-history-toggle:hover,
+main .honors-history-toggle:focus-visible{
+  color:var(--portfolio-primary,#f4f6f8);
+  background:rgba(240,165,87,.025);
+}
+main .honors-history-toggle:focus-visible{
+  outline:2px solid var(--portfolio-accent,#f0a557);
+  outline-offset:3px;
+}
+main .competition-year[hidden]{
+  display:none!important;
+}
+
+@media(max-width:780px){
+  main .competition-year{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+    padding:24px 0!important;
+  }
+  main .competition-year>time,
+  main .competition-year-results{
+    grid-column:1!important;
+  }
+  main .competition-entry-main{
+    grid-template-columns:minmax(0,1fr) auto!important;
+  }
+}
+
 /* Selected RoboCup credentials: evidence-led certificate viewer */
 .credential-gallery{display:none!important}
 .credential-evidence-row{
@@ -1784,4 +1946,36 @@ main .skills-grid .skill-card:hover{
   main .skills-grid .skill-card:hover{
     transform:none!important;
   }
+}
+
+/* Final cascade for the experimental awards redesign. */
+main .competition-year,
+main .competition-year:hover{
+  transform:none!important;
+  will-change:auto!important;
+  box-shadow:none!important;
+}
+main .competition-year:hover{
+  background:linear-gradient(90deg,rgba(240,165,87,.025),transparent 72%)!important;
+}
+main .competition-year>time,
+main .competition-year:hover>time{
+  color:var(--portfolio-accent,#f0a557)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+main .competition-result strong{
+  display:inline-flex!important;
+  align-items:baseline!important;
+  color:var(--portfolio-accent,#f0a557)!important;
+  background:transparent!important;
+  padding:0!important;
+  box-shadow:none!important;
+}
+main .competition-result strong sup{
+  color:inherit!important;
+}
+main .competition-trophy,
+main .technical-awards>span{
+  display:none!important;
 }

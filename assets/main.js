@@ -354,6 +354,23 @@
     });
     row.appendChild(button);
   });
+  const awardsLedger = $('.competition-ledger');
+  const earlierAwardYears = $$('.competition-year', awardsLedger).filter(group => Number($('time', group)?.textContent.trim()) <= 2016);
+  if (awardsLedger && earlierAwardYears.length) {
+    earlierAwardYears.forEach(group => { group.hidden = true; });
+    const historyToggle = document.createElement('button');
+    historyToggle.type = 'button';
+    historyToggle.className = 'honors-history-toggle';
+    historyToggle.setAttribute('aria-expanded', 'false');
+    historyToggle.textContent = 'VIEW EARLIER RESULTS · 2013–2016';
+    awardsLedger.insertBefore(historyToggle, earlierAwardYears[0]);
+    historyToggle.addEventListener('click', () => {
+      const expanded = historyToggle.getAttribute('aria-expanded') === 'true';
+      earlierAwardYears.forEach(group => { group.hidden = expanded; });
+      historyToggle.setAttribute('aria-expanded', String(!expanded));
+      historyToggle.textContent = expanded ? 'VIEW EARLIER RESULTS · 2013–2016' : 'HIDE EARLIER RESULTS · 2013–2016';
+    });
+  }
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
   lbNext.addEventListener('click', () => renderLb(lbIndex + 1));
