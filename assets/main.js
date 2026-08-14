@@ -357,19 +357,50 @@
   const awardsLedger = $('.competition-ledger');
   const earlierAwardYears = $$('.competition-year', awardsLedger).filter(group => Number($('time', group)?.textContent.trim()) <= 2016);
   if (awardsLedger && earlierAwardYears.length) {
-    earlierAwardYears.forEach(group => { group.hidden = true; });
+    const comparison = document.createElement('div');
+    comparison.className = 'honors-design-switcher';
+    comparison.setAttribute('aria-label', 'Temporary Honors and Awards design comparison');
+    comparison.innerHTML = `
+      <span>HONORS DESIGN PREVIEW</span>
+      <div class="honors-design-options" role="group" aria-label="Choose Honors and Awards layout">
+        <button type="button" data-honors-choice="current">CURRENT</button>
+        <button type="button" data-honors-choice="proposed">PROPOSED</button>
+      </div>`;
+    awardsLedger.parentNode.insertBefore(comparison, awardsLedger);
+
     const historyToggle = document.createElement('button');
     historyToggle.type = 'button';
     historyToggle.className = 'honors-history-toggle';
     historyToggle.setAttribute('aria-expanded', 'false');
     historyToggle.textContent = 'VIEW EARLIER RESULTS · 2013–2016';
     awardsLedger.insertBefore(historyToggle, earlierAwardYears[0]);
+
+    const comparisonButtons = $$('[data-honors-choice]', comparison);
+    const applyHonorsDesign = design => {
+      const selectedDesign = design === 'current' ? 'current' : 'proposed';
+      document.documentElement.dataset.honorsDesign = selectedDesign;
+      comparisonButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.honorsChoice === selectedDesign));
+      });
+      const useProposed = selectedDesign === 'proposed';
+      const historyExpanded = historyToggle.getAttribute('aria-expanded') === 'true';
+      historyToggle.hidden = !useProposed;
+      earlierAwardYears.forEach(group => {
+        group.hidden = useProposed && !historyExpanded;
+      });
+      try { localStorage.setItem('honors-design-preview', selectedDesign); } catch (error) {}
+    };
+
+    comparisonButtons.forEach(button => {
+      button.addEventListener('click', () => applyHonorsDesign(button.dataset.honorsChoice));
+    });
     historyToggle.addEventListener('click', () => {
       const expanded = historyToggle.getAttribute('aria-expanded') === 'true';
       earlierAwardYears.forEach(group => { group.hidden = expanded; });
       historyToggle.setAttribute('aria-expanded', String(!expanded));
       historyToggle.textContent = expanded ? 'VIEW EARLIER RESULTS · 2013–2016' : 'HIDE EARLIER RESULTS · 2013–2016';
     });
+    applyHonorsDesign(document.documentElement.dataset.honorsDesign);
   }
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
