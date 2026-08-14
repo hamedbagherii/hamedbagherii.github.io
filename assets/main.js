@@ -355,25 +355,36 @@
     row.appendChild(button);
   });
   const awardsLedger = $('.competition-ledger');
-  const medalClasses = ['medal-gold', 'medal-silver', 'medal-bronze'];
-  $$('.achievement-summary article').slice(0, 3).forEach((summary, index) => {
-    const medal = document.createElement('span');
-    medal.className = `placement-medal placement-medal-summary ${medalClasses[index]}`;
-    medal.setAttribute('aria-hidden', 'true');
-    summary.insertBefore(medal, summary.firstChild);
+  const cupClasses = ['cup-gold', 'cup-silver', 'cup-bronze'];
+  const placementLabels = ['1st place', '2nd place', '3rd place'];
+  const placementFilters = $$('.achievement-summary article').slice(0, 3).map((summary, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'achievement-filter';
+    button.dataset.placementFilter = placementLabels[index];
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-label', `Show only ${placementLabels[index]} results`);
+    while (summary.firstChild) button.appendChild(summary.firstChild);
+    const cup = document.createElement('span');
+    cup.className = `placement-cup placement-cup-summary ${cupClasses[index]}`;
+    cup.setAttribute('aria-hidden', 'true');
+    button.insertBefore(cup, button.firstChild);
+    summary.appendChild(button);
+    return button;
   });
   $$('.competition-result', awardsLedger).forEach(result => {
     const placement = result.getAttribute('aria-label') || '';
-    const medalIndex = /1st place/i.test(placement) ? 0 : /2nd place/i.test(placement) ? 1 : /3rd place/i.test(placement) ? 2 : -1;
-    if (medalIndex < 0) return;
-    const medal = document.createElement('span');
-    medal.className = `placement-medal ${medalClasses[medalIndex]}`;
-    medal.setAttribute('aria-hidden', 'true');
-    result.insertBefore(medal, result.firstChild);
+    const cupIndex = /1st place/i.test(placement) ? 0 : /2nd place/i.test(placement) ? 1 : /3rd place/i.test(placement) ? 2 : -1;
+    if (cupIndex < 0) return;
+    const cup = document.createElement('span');
+    cup.className = `placement-cup ${cupClasses[cupIndex]}`;
+    cup.setAttribute('aria-hidden', 'true');
+    result.insertBefore(cup, result.firstChild);
   });
   const awardYears = awardsLedger ? $$('.competition-year', awardsLedger) : [];
   if (awardsLedger && awardYears.length) {
     awardsLedger.classList.add('honors-accordion');
+    let activePlacementFilter = '';
 
     const setAwardYearOpen = (yearGroup, open, focus = false) => {
       const toggle = $('.honors-year-toggle', yearGroup);
@@ -420,8 +431,48 @@
 
       toggle.addEventListener('click', () => {
         const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
-        awardYears.forEach(group => setAwardYearOpen(group, group === yearGroup && willOpen));
+        if (activePlacementFilter) {
+          setAwardYearOpen(yearGroup, willOpen);
+        } else {
+          awardYears.forEach(group => setAwardYearOpen(group, group === yearGroup && willOpen));
+        }
       });
+    });
+
+    const filterStatus = document.createElement('p');
+    filterStatus.className = 'honors-filter-status';
+    filterStatus.setAttribute('aria-live', 'polite');
+    awardsLedger.parentNode.insertBefore(filterStatus, awardsLedger);
+
+    const applyPlacementFilter = placement => {
+      activePlacementFilter = activePlacementFilter === placement ? '' : placement;
+      placementFilters.forEach(button => {
+        const selected = button.dataset.placementFilter === activePlacementFilter;
+        button.setAttribute('aria-pressed', String(selected));
+        button.setAttribute('aria-label', selected ? `Clear ${placement} results filter` : `Show only ${button.dataset.placementFilter} results`);
+      });
+      awardsLedger.classList.toggle('is-filtered', Boolean(activePlacementFilter));
+
+      awardYears.forEach((yearGroup, index) => {
+        const entries = $$('.competition-entry', yearGroup);
+        let matchingEntries = 0;
+        entries.forEach(entry => {
+          const resultPlacement = $('.competition-result', entry)?.getAttribute('aria-label') || '';
+          const matches = !activePlacementFilter || resultPlacement.toLowerCase() === activePlacementFilter;
+          entry.hidden = !matches;
+          if (matches) matchingEntries += 1;
+        });
+        yearGroup.hidden = Boolean(activePlacementFilter) && matchingEntries === 0;
+        setAwardYearOpen(yearGroup, activePlacementFilter ? matchingEntries > 0 : index === 0);
+      });
+
+      filterStatus.textContent = activePlacementFilter
+        ? `SHOWING ${activePlacementFilter.toUpperCase()} RESULTS · SELECT AGAIN TO CLEAR`
+        : '';
+    };
+
+    placementFilters.forEach(button => {
+      button.addEventListener('click', () => applyPlacementFilter(button.dataset.placementFilter));
     });
   }
   lbClose.addEventListener('click', closeLb);
