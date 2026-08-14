@@ -1588,19 +1588,48 @@ main .skills-grid .skill-card{
 }
 main .skills-grid .skill-card .skill-head{
   display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:11px!important;
+  min-height:30px!important;
+  margin-bottom:18px!important;
+}
+main .skills-grid .skill-card .skill-head::after{
+  content:""!important;
+  order:2!important;
+  flex:1 1 auto!important;
+  height:1px!important;
+  background:linear-gradient(90deg,rgba(240,165,87,.30),var(--neutral-structure) 45%,transparent)!important;
+  transition:background .2s ease!important;
 }
 main .skills-grid .skill-card .skill-head>span{
-  padding-left:0!important;
+  order:1!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  flex:0 0 38px!important;
+  width:38px!important;
+  height:28px!important;
+  padding-left:2px!important;
   border-left:0!important;
   color:var(--portfolio-muted)!important;
-  font-size:inherit!important;
-  line-height:inherit!important;
+  background:linear-gradient(155deg,rgba(255,255,255,.045),rgba(255,255,255,.012))!important;
+  box-shadow:inset 2px 0 rgba(240,165,87,.42)!important;
+  clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px))!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.10em!important;
+  transition:color .2s ease,background .2s ease,box-shadow .2s ease,text-shadow .2s ease!important;
 }
 main .skills-grid .skill-card .skill-head>b{
+  order:3!important;
   display:inline!important;
+  flex:0 0 auto!important;
+  font-size:10px!important;
+  letter-spacing:.12em!important;
 }
 main .skills-grid .skill-card h3{
-  margin:0 0 26px!important;
+  margin:0 0 24px!important;
   font-size:24px!important;
   line-height:1.2!important;
   letter-spacing:normal!important;
@@ -1612,8 +1641,13 @@ main .skills-grid .skill-card ul{
   margin:0!important;
 }
 main .skills-grid .skill-card li{
-  display:list-item!important;
+  display:grid!important;
+  grid-template-columns:5px minmax(0,1fr)!important;
+  column-gap:9px!important;
+  align-items:start!important;
+  position:relative!important;
   width:auto!important;
+  padding-left:0!important;
   font-size:15px!important;
   line-height:1.5!important;
   letter-spacing:normal!important;
@@ -1621,16 +1655,35 @@ main .skills-grid .skill-card li{
 }
 main .skills-grid .skill-card li::before{
   content:""!important;
-  position:absolute!important;
-  width:3px!important;
-  height:3px!important;
-  margin:0!important;
-  background:var(--portfolio-accent,#f0a557)!important;
+  position:static!important;
+  align-self:start!important;
+  width:5px!important;
+  height:5px!important;
+  margin:9px 0 0!important;
+  border:1px solid rgba(240,165,87,.72)!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  transform:none!important;
+  box-shadow:none!important;
+  transition:border-color .2s ease,box-shadow .2s ease!important;
+}
+main .skills-grid .skill-card:hover li::before{
+  border-color:var(--portfolio-accent,#f0a557)!important;
+  box-shadow:0 0 6px rgba(240,165,87,.24)!important;
+}
+main .skills-grid .skill-card li:first-child::before{
+  content:""!important;
+  margin:9px 0 0!important;
 }
 main .skills-grid .skill-card:hover .skill-head>span{
   color:var(--portfolio-accent,#f0a557)!important;
   border-left:0!important;
-  text-shadow:0 0 8px rgba(240,165,87,.58),0 0 18px rgba(240,165,87,.22)!important;
+  background:linear-gradient(155deg,rgba(240,165,87,.14),rgba(240,165,87,.035))!important;
+  box-shadow:inset 2px 0 var(--portfolio-accent,#f0a557),0 0 12px rgba(240,165,87,.16)!important;
+  text-shadow:0 0 8px rgba(240,165,87,.52)!important;
+}
+main .skills-grid .skill-card:hover .skill-head::after{
+  background:linear-gradient(90deg,rgba(240,165,87,.55),var(--neutral-structure) 55%,transparent)!important;
 }
 
 @media(max-width:780px){
@@ -1651,6 +1704,7 @@ main .skills-grid .skill-card:hover .skill-head>span{
   }
   main .skills-grid .skill-card .skill-head{
     display:flex!important;
+    margin-bottom:18px!important;
   }
   main .skills-grid .skill-card h3{
     display:block!important;
@@ -1663,4 +1717,71 @@ main .skills-grid .skill-card:hover .skill-head>span{
 
 main .achievement-summary span{
   font-size:12.5px!important;
+}
+
+/* Awards ledger: interaction belongs to each complete year group. */
+main .competition-entry{
+  transition:none!important;
+  will-change:auto!important;
+}
+main .competition-entry:hover{
+  transform:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+main .competition-year{
+  position:relative!important;
+  transition:transform .24s cubic-bezier(.2,.75,.25,1),background-color .22s ease,box-shadow .22s ease!important;
+  will-change:transform;
+}
+main .competition-year:hover{
+  transform:translateX(8px)!important;
+  background:linear-gradient(90deg,rgba(240,165,87,.04),rgba(240,165,87,.01) 52%,transparent 86%)!important;
+  box-shadow:none!important;
+}
+main .competition-year>time{
+  color:var(--portfolio-muted,#707a73)!important;
+  text-shadow:none!important;
+  opacity:.72!important;
+  transition:color .2s ease,opacity .2s ease,text-shadow .2s ease!important;
+}
+main .competition-year:hover>time{
+  color:var(--portfolio-accent,#f0a557)!important;
+  opacity:1!important;
+  text-shadow:0 0 8px rgba(240,165,87,.5),0 0 18px rgba(240,165,87,.18)!important;
+}
+main .competition-year .competition-entry-main p,
+main .competition-year .technical-awards{
+  transition:color .2s ease,opacity .2s ease!important;
+}
+main .competition-year:hover .competition-entry-main p{
+  color:var(--portfolio-primary,#f4f6f8)!important;
+}
+main .competition-year:hover .technical-awards{
+  opacity:1!important;
+}
+
+/* Match the year-group response on complete expertise boards. */
+main .skills-grid .skill-card{
+  position:relative!important;
+  transition:transform .24s cubic-bezier(.2,.75,.25,1),background-color .2s ease!important;
+  will-change:transform;
+}
+main .skills-grid .skill-card:hover{
+  z-index:1!important;
+  transform:translateX(8px)!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  main .competition-entry,
+  main .competition-year,
+  main .skills-grid .skill-card{
+    transition:none!important;
+    will-change:auto!important;
+  }
+  main .competition-entry:hover,
+  main .competition-year:hover,
+  main .skills-grid .skill-card:hover{
+    transform:none!important;
+  }
 }
