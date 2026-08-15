@@ -354,6 +354,137 @@
     });
     row.appendChild(button);
   });
+  const awardsLedger = $('.competition-ledger');
+  const cupClasses = ['cup-gold', 'cup-silver', 'cup-bronze'];
+  const placementLabels = ['1st place', '2nd place', '3rd place'];
+  const placementFilters = $$('.achievement-summary article').slice(0, 3).map((summary, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'achievement-filter';
+    button.dataset.placementFilter = placementLabels[index];
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-label', `Show only ${placementLabels[index]} results`);
+    while (summary.firstChild) button.appendChild(summary.firstChild);
+    const cup = document.createElement('span');
+    cup.className = `placement-cup placement-cup-summary ${cupClasses[index]}`;
+    cup.setAttribute('aria-hidden', 'true');
+    button.insertBefore(cup, button.firstChild);
+    summary.appendChild(button);
+    return button;
+  });
+  $$('.competition-result', awardsLedger).forEach(result => {
+    const placement = result.getAttribute('aria-label') || '';
+    const cupIndex = /1st place/i.test(placement) ? 0 : /2nd place/i.test(placement) ? 1 : /3rd place/i.test(placement) ? 2 : -1;
+    if (cupIndex < 0) return;
+    const cup = document.createElement('span');
+    cup.className = `placement-cup ${cupClasses[cupIndex]}`;
+    cup.setAttribute('aria-hidden', 'true');
+    result.insertBefore(cup, result.firstChild);
+  });
+  const awardYears = awardsLedger ? $$('.competition-year', awardsLedger) : [];
+  if (awardsLedger && awardYears.length) {
+    awardsLedger.classList.add('honors-accordion');
+    let activePlacementFilter = '';
+
+    const setAwardYearOpen = (yearGroup, open, focus = false) => {
+      const toggle = $('.honors-year-toggle', yearGroup);
+      const panel = $('.competition-year-results', yearGroup);
+      yearGroup.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      $('.honors-year-action-label', toggle).textContent = open ? 'CLOSE' : 'VIEW';
+      panel.hidden = !open;
+      if (focus) toggle.focus();
+    };
+
+    awardYears.forEach((yearGroup, index) => {
+      const yearTime = $('time', yearGroup);
+      const results = $('.competition-year-results', yearGroup);
+      const entries = $$('.competition-entry', results);
+      const podiums = entries.filter(entry => {
+        const place = $('.competition-result', entry)?.getAttribute('aria-label') || '';
+        return /^(1st|2nd|3rd) place$/i.test(place);
+      }).length;
+      const technicalAwards = $$('.technical-awards li', results).length;
+      const summaryParts = [`${entries.length} ${entries.length === 1 ? 'EVENT' : 'EVENTS'}`];
+      if (podiums) summaryParts.push(`${podiums} ${podiums === 1 ? 'PODIUM' : 'PODIUMS'}`);
+      if (technicalAwards) summaryParts.push(`${technicalAwards} TECHNICAL ${technicalAwards === 1 ? 'AWARD' : 'AWARDS'}`);
+
+      const year = yearTime.textContent.trim();
+      const panelId = `honors-year-${year}`;
+      results.id = panelId;
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'honors-year-toggle';
+      toggle.setAttribute('aria-controls', panelId);
+      toggle.setAttribute('aria-label', `${year}: ${summaryParts.join(', ')}`);
+      toggle.innerHTML = `
+        <span class="honors-year-identity"></span>
+        <span class="honors-year-summary">${summaryParts.map(part => `<span class="honors-summary-part${part.includes('TECHNICAL') ? ' is-technical' : ''}">${part}</span>`).join('')}</span>
+        <span class="honors-year-action" aria-hidden="true">
+          <span class="honors-year-action-label">VIEW</span>
+          <i></i>
+        </span>`;
+      $('.honors-year-identity', toggle).appendChild(yearTime);
+      yearGroup.insertBefore(toggle, results);
+      setAwardYearOpen(yearGroup, index === 0);
+
+      toggle.addEventListener('click', () => {
+        const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
+        if (activePlacementFilter) {
+          setAwardYearOpen(yearGroup, willOpen);
+        } else {
+          awardYears.forEach(group => setAwardYearOpen(group, group === yearGroup && willOpen));
+        }
+      });
+    });
+
+    const filterBar = document.createElement('div');
+    filterBar.className = 'honors-filter-bar';
+    const filterStatus = document.createElement('p');
+    filterStatus.className = 'honors-filter-status';
+    filterStatus.setAttribute('aria-live', 'polite');
+    const clearFilter = document.createElement('button');
+    clearFilter.type = 'button';
+    clearFilter.className = 'honors-filter-clear';
+    clearFilter.innerHTML = '<span class="honors-filter-all-icon" aria-hidden="true"></span> SHOW ALL RESULTS';
+    clearFilter.hidden = true;
+    filterBar.append(filterStatus, clearFilter);
+    awardsLedger.parentNode.insertBefore(filterBar, awardsLedger);
+
+    const applyPlacementFilter = placement => {
+      activePlacementFilter = activePlacementFilter === placement ? '' : placement;
+      placementFilters.forEach(button => {
+        const selected = button.dataset.placementFilter === activePlacementFilter;
+        button.setAttribute('aria-pressed', String(selected));
+        button.setAttribute('aria-label', selected ? `Clear ${placement} results filter` : `Show only ${button.dataset.placementFilter} results`);
+      });
+      awardsLedger.classList.toggle('is-filtered', Boolean(activePlacementFilter));
+      clearFilter.hidden = !activePlacementFilter;
+
+      awardYears.forEach((yearGroup, index) => {
+        const entries = $$('.competition-entry', yearGroup);
+        let matchingEntries = 0;
+        entries.forEach(entry => {
+          const resultPlacement = $('.competition-result', entry)?.getAttribute('aria-label') || '';
+          const matches = !activePlacementFilter || resultPlacement.toLowerCase() === activePlacementFilter;
+          entry.hidden = !matches;
+          if (matches) matchingEntries += 1;
+        });
+        yearGroup.hidden = Boolean(activePlacementFilter) && matchingEntries === 0;
+        setAwardYearOpen(yearGroup, activePlacementFilter ? matchingEntries > 0 : index === 0);
+      });
+
+      filterStatus.textContent = activePlacementFilter
+        ? `SHOWING ${activePlacementFilter.toUpperCase()} RESULTS`
+        : '';
+    };
+
+    placementFilters.forEach(button => {
+      button.addEventListener('click', () => applyPlacementFilter(button.dataset.placementFilter));
+    });
+    clearFilter.addEventListener('click', () => applyPlacementFilter(activePlacementFilter));
+  }
   lbClose.addEventListener('click', closeLb);
   lbPrev.addEventListener('click', () => renderLb(lbIndex - 1));
   lbNext.addEventListener('click', () => renderLb(lbIndex + 1));
