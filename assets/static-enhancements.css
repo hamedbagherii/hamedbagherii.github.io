@@ -2469,3 +2469,6 @@ main .achievement-summary .placement-cup-summary{
   flex-basis:30px!important;
   font-size:27px!important;
 }
+main .achievement-summary .placement-cup-summary::before{
+  transform:translateX(-2px);
+}
