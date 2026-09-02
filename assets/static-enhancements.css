@@ -1285,6 +1285,44 @@ main .exo-video-selector-copy strong{
   color:var(--portfolio-primary)!important;
 }
 
+.publication-link{
+  display:inline-flex;
+  align-items:flex-start;
+  gap:.55em;
+  transition:color .18s ease,text-shadow .18s ease;
+}
+.publication-link span{
+  color:var(--portfolio-accent,#f0a557);
+  flex:none;
+  font:700 .68em/1 var(--mono);
+  transform:translateY(.22em);
+  transition:transform .18s ease,text-shadow .18s ease;
+}
+.publication-link:hover,
+.publication-link:focus-visible{
+  color:#fff!important;
+  text-shadow:0 0 16px rgba(240,165,87,.2);
+}
+.publication-link:hover span,
+.publication-link:focus-visible span{
+  transform:translate(.14em,.08em);
+  text-shadow:0 0 10px rgba(240,165,87,.55);
+}
+.publication-link:focus-visible{
+  outline:1px solid var(--portfolio-accent,#f0a557);
+  outline-offset:5px;
+}
+@media (prefers-reduced-motion:reduce){
+  .publication-link,
+  .publication-link span{
+    transition:none;
+  }
+  .publication-link:hover span,
+  .publication-link:focus-visible span{
+    transform:translateY(.22em);
+  }
+}
+
 /* Secondary: readable descriptions and supporting copy. */
 main .about-statement p:not(.lead),
 main .project-description,
